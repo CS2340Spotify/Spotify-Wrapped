@@ -1,13 +1,18 @@
 package com.example.spotify_wrapped;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
@@ -43,29 +48,50 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        CardView cardViewSignIn = findViewById(R.id.cardview_sign_in);
+        CardView cardViewSignUp = findViewById(R.id.cardview_sign_up);
+        TextView signUpTextView = findViewById(R.id.sign_up_selection_clickable);
+        TextView signInTextView = findViewById(R.id.sign_in_selection_clickable);
+
+        signUpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardViewSignIn.setVisibility(View.GONE);
+                cardViewSignUp.setVisibility(View.VISIBLE);
+            }
+        });
+
+        signInTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardViewSignIn.setVisibility(View.VISIBLE);
+                cardViewSignUp.setVisibility(View.GONE);
+            }
+        });
+
         // Initialize the views
-        tokenTextView = (TextView) findViewById(R.id.token_text_view);
-        codeTextView = (TextView) findViewById(R.id.code_text_view);
-        profileTextView = (TextView) findViewById(R.id.response_text_view);
-
-        // Initialize the buttons
-        Button tokenBtn = (Button) findViewById(R.id.token_btn);
-        Button codeBtn = (Button) findViewById(R.id.code_btn);
-        Button profileBtn = (Button) findViewById(R.id.profile_btn);
-
-        // Set the click listeners for the buttons
-
-        tokenBtn.setOnClickListener((v) -> {
-            getToken();
-        });
-
-        codeBtn.setOnClickListener((v) -> {
-            getCode();
-        });
-
-        profileBtn.setOnClickListener((v) -> {
-            onGetUserProfileClicked();
-        });
+//        tokenTextView = (TextView) findViewById(R.id.token_text_view);
+//        codeTextView = (TextView) findViewById(R.id.code_text_view);
+//        profileTextView = (TextView) findViewById(R.id.response_text_view);
+//
+//        // Initialize the buttons
+//        Button tokenBtn = (Button) findViewById(R.id.token_btn);
+//        Button codeBtn = (Button) findViewById(R.id.code_btn);
+//        Button profileBtn = (Button) findViewById(R.id.profile_btn);
+//
+//        // Set the click listeners for the buttons
+//
+//        tokenBtn.setOnClickListener((v) -> {
+//            getToken();
+//        });
+//
+//        codeBtn.setOnClickListener((v) -> {
+//            getCode();
+//        });
+//
+//        profileBtn.setOnClickListener((v) -> {
+//            onGetUserProfileClicked();
+//        });
 
     }
 
