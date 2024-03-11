@@ -59,11 +59,30 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/sign_in_with_spotify"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/spotify_logo"
+                android:text="Sign in with Spotify"
+                android:textSize="16sp"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:backgroundTint="@color/spotify_green" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:text="or"
+                android:gravity="center" />
+
             <EditText
                 android:id="@+id/username_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/login_fields"
                 android:fontFamily="@font/circular_std_medium_500"
                 android:hint="Username"
@@ -152,11 +171,11 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/connectSpotifyButton"
+                android:id="@+id/linkSpotifyButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawableLeft="@drawable/spotify_logo"
-                android:text="Link with Spotify"
+                android:text="Link to Spotify"
                 android:textSize="16sp"
                 android:layout_marginTop="40dp"
                 android:fontFamily="@font/circular_std_medium_500"
@@ -169,7 +188,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/login_fields"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:hint="Username"
+                android:hint="Enter Your Username"
                 android:paddingLeft="25dp"
                 android:textColor="@color/black"
                 android:textColorHighlight="@color/white"
@@ -182,8 +201,9 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/login_fields"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:hint="Password"
+                android:hint="Enter Your Password"
                 android:paddingLeft="25dp"
+                android:inputType="textPassword"
                 android:textColor="@color/black"
                 android:textColorHighlight="@color/white"
                 android:textStyle="bold" />
