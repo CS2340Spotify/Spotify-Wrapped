@@ -39,12 +39,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
+                    android:background="@drawable/green_underline"
+                    android:fontFamily="@font/circular_std_medium_500"
                     android:paddingBottom="6dp"
                     android:text="Update Account Information"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/circular_std_medium_500"
                     android:textColor="@color/white"
-                    android:background="@drawable/green_underline" />
+                    android:textSize="18sp" />
 
 
             </LinearLayout>
@@ -53,7 +53,7 @@
                 android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/login_fields"
                 android:fontFamily="@font/circular_std_medium_500"
                 android:hint="Enter New Name"
@@ -108,7 +108,18 @@
                 android:layout_height="match_parent"
                 android:text="Save Changes"
                 android:textSize="16sp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="50dp"
+
+                android:fontFamily="@font/circular_std_medium_500"
+                android:backgroundTint="@color/spotify_green" />
+
+            <Button
+                android:id="@+id/back_to_settings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Back"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/circular_std_medium_500"
                 android:backgroundTint="@color/spotify_green" />
