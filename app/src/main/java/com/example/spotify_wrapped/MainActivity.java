@@ -81,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
      * What is token?
      * https://developer.spotify.com/documentation/general/guides/authorization-guide/
      */
+    private void getToken() {
+        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
+        builder.setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private"});
+        AuthorizationRequest request = builder.build();
+        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
+    }
 
     /**
      * Get code from Spotify
