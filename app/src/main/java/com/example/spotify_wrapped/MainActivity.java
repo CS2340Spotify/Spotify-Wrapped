@@ -82,9 +82,7 @@ public class MainActivity extends AppCompatActivity {
      * https://developer.spotify.com/documentation/general/guides/authorization-guide/
      */
     private void getToken() {
-        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
-        builder.setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private"});
-        AuthorizationRequest request = builder.build();
+        AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
         AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
     }
 
@@ -95,9 +93,7 @@ public class MainActivity extends AppCompatActivity {
      * https://developer.spotify.com/documentation/general/guides/authorization-guide/
      */
     private void getCode() {
-        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.CODE, REDIRECT_URI);
-        builder.setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private"});
-        AuthorizationRequest request = builder.build();
+        AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
         AuthorizationClient.openLoginActivity(this, AUTH_CODE_REQUEST_CODE, request);
     }
 
@@ -106,6 +102,26 @@ public class MainActivity extends AppCompatActivity {
      * When the app leaves this activity to momentarily get a token/code, this function
      * fetches the result of that external activity to get the response from Spotify
      */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        // Check if result comes from the correct activity
+        if (requestCode == AUTH_TOKEN_REQUEST_CODE || requestCode == AUTH_CODE_REQUEST_CODE) {
+            AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, intent);
+            if (response.getError() != null && response.getError().isEmpty()) {
+                if (requestCode == AUTH_TOKEN_REQUEST_CODE) {
+                    mAccessToken = response.getAccessToken();
+                    setTextAsync(mAccessToken, tokenTextView);
+                } else if (requestCode == AUTH_CODE_REQUEST_CODE) {
+                    mAccessCode = response.getCode();
+                    setTextAsync(mAccessCode, codeTextView);
+                }
+            } else {
+                Toast.makeText(this, "Error: " + response.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 
     /**
@@ -124,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 .addHeader("Authorization", "Bearer " + mAccessToken)
                 .build();
 
-        cancelCall();
+        getRedirectUri();
         mCall = mOkHttpClient.newCall(request);
 
         mCall.enqueue(new Callback() {
@@ -166,6 +182,12 @@ public class MainActivity extends AppCompatActivity {
      * @param type the type of the request
      * @return the authentication request
      */
+    private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
+        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID, type, REDIRECT_URI);
+        builder.setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private"});
+        return builder.build();
+    }
+
 
     /**
      * Gets the redirect Uri for Spotify
@@ -173,10 +195,9 @@ public class MainActivity extends AppCompatActivity {
      * @return redirect Uri object
      */
 
-    private void cancelCall() {
-        if (mCall != null) {
-            mCall.cancel();
-        }
+    private Uri getRedirectUri() {
+        return Uri.parse(REDIRECT_URI);
     }
+
 
 }
