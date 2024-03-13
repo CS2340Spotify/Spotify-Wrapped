@@ -94,7 +94,12 @@ public class MainActivity extends AppCompatActivity {
      * What is code?
      * https://developer.spotify.com/documentation/general/guides/authorization-guide/
      */
-
+    private void getCode() {
+        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.CODE, REDIRECT_URI);
+        builder.setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private"});
+        AuthorizationRequest request = builder.build();
+        AuthorizationClient.openLoginActivity(this, AUTH_CODE_REQUEST_CODE, request);
+    }
 
 
     /**
