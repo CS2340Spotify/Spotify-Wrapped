@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class fragment_settings_page extends Fragment {
+public class SettingsFragment extends Fragment {
 
     private FragmentSettingsPageViewModel mViewModel;
 
-    public static fragment_settings_page newInstance() {
-        return new fragment_settings_page();
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
     }
 
     @Override
