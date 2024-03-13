@@ -15,11 +15,32 @@ public class User {
         this.name = name;
         this.email = email;
         this.id = id;
-        this.image = image;
         this.password = password;
         this.username = username;
         this.accessToken = accessToken;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
 }
