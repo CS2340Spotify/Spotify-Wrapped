@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,26 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CardView cardViewSignIn = findViewById(R.id.cardview_sign_in);
-        CardView cardViewSignUp = findViewById(R.id.cardview_sign_up);
-        TextView signUpTextView = findViewById(R.id.sign_up_selection_clickable);
-        TextView signInTextView = findViewById(R.id.sign_in_selection_clickable);
-
-        signUpTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cardViewSignIn.setVisibility(View.GONE);
-                cardViewSignUp.setVisibility(View.VISIBLE);
-            }
-        });
-
-        signInTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cardViewSignIn.setVisibility(View.VISIBLE);
-                cardViewSignUp.setVisibility(View.GONE);
-            }
-        });
+        Intent login = new Intent(this, LoginActivity.class);
+        MainActivity.this.startActivity(login);
 
         // Initialize the views
 //        tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -101,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
      * What is token?
      * https://developer.spotify.com/documentation/general/guides/authorization-guide/
      */
-    public void getToken() {
-        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
-        AuthorizationClient.openLoginActivity(MainActivity.this, AUTH_TOKEN_REQUEST_CODE, request);
+    private void getToken() {
+        AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
+        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
     }
 
     /**
@@ -112,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
      * What is code?
      * https://developer.spotify.com/documentation/general/guides/authorization-guide/
      */
-    public void getCode() {
-        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
-        AuthorizationClient.openLoginActivity(MainActivity.this, AUTH_CODE_REQUEST_CODE, request);
+    private void getCode() {
+        AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
+        AuthorizationClient.openLoginActivity(this, AUTH_CODE_REQUEST_CODE, request);
     }
 
 
@@ -123,20 +103,26 @@ public class MainActivity extends AppCompatActivity {
      * fetches the result of that external activity to get the response from Spotify
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        final AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
-        // Check which request code is present (if any)
-        if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
-            mAccessToken = response.getAccessToken();
-            setTextAsync(mAccessToken, tokenTextView);
-
-        } else if (AUTH_CODE_REQUEST_CODE == requestCode) {
-            mAccessCode = response.getCode();
-            setTextAsync(mAccessCode, codeTextView);
+        // Check if result comes from the correct activity
+        if (requestCode == AUTH_TOKEN_REQUEST_CODE || requestCode == AUTH_CODE_REQUEST_CODE) {
+            AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, intent);
+            if (response.getError() != null && response.getError().isEmpty()) {
+                if (requestCode == AUTH_TOKEN_REQUEST_CODE) {
+                    mAccessToken = response.getAccessToken();
+                    setTextAsync(mAccessToken, tokenTextView);
+                } else if (requestCode == AUTH_CODE_REQUEST_CODE) {
+                    mAccessCode = response.getCode();
+                    setTextAsync(mAccessCode, codeTextView);
+                }
+            } else {
+                Toast.makeText(this, "Error: " + response.getError(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
 
     /**
      * Get user profile
@@ -154,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 .addHeader("Authorization", "Bearer " + mAccessToken)
                 .build();
 
-        cancelCall();
+        getRedirectUri();
         mCall = mOkHttpClient.newCall(request);
 
         mCall.enqueue(new Callback() {
@@ -197,31 +183,21 @@ public class MainActivity extends AppCompatActivity {
      * @return the authentication request
      */
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
-        return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
-                .setShowDialog(false)
-                .setScopes(new String[] { "user-read-email" }) // <--- Change the scope of your requested token here
-                .setCampaign("your-campaign-token")
-                .build();
+        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID, type, REDIRECT_URI);
+        builder.setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private"});
+        return builder.build();
     }
+
 
     /**
      * Gets the redirect Uri for Spotify
      *
      * @return redirect Uri object
      */
+
     private Uri getRedirectUri() {
         return Uri.parse(REDIRECT_URI);
     }
 
-    private void cancelCall() {
-        if (mCall != null) {
-            mCall.cancel();
-        }
-    }
 
-    @Override
-    protected void onDestroy() {
-        cancelCall();
-        super.onDestroy();
-    }
 }
