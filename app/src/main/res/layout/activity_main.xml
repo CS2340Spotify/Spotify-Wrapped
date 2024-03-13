@@ -50,11 +50,11 @@
                     android:id="@+id/sign_up_selection_clickable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SIGN UP"
-                    android:textSize="18sp"
+                    android:clickable="true"
                     android:fontFamily="@font/circular_std_medium_500"
+                    android:text="SIGN UP"
                     android:textColor="@color/white"
-                    android:clickable="true" />
+                    android:textSize="18sp" />
 
 
             </LinearLayout>
