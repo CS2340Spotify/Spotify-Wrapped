@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 public class SettingsFragment extends Fragment {
 
-    private FragmentSettingsPageViewModel mViewModel;
+    private SettingsFragmentViewModel mViewModel;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -29,7 +29,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(FragmentSettingsPageViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(SettingsFragmentViewModel.class);
         // TODO: Use the ViewModel
     }
 
