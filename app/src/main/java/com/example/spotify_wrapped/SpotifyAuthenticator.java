@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -29,7 +31,8 @@ public class SpotifyAuthenticator {
     public static final String CLIENT_ID = "5f05cbeda0b94c5fa48f4c6a1b5e56cd";
     public static final String REDIRECT_URI = "spotify-wrapped://auth";
     private Call call;
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    final OkHttpClient okHttpClient = new OkHttpClient();
+    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");;
 
 
 
@@ -78,6 +81,8 @@ public class SpotifyAuthenticator {
                         image = (String) imageOb.get("url");
                     }
                     User newUser = new User(name, email, id, image, password, username, accessToken);
+
+                    mDatabase.child(id).setValue(newUser);
                 } catch (JSONException e) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
