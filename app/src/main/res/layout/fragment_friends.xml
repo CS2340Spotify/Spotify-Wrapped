@@ -1,14 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".FriendsFragment">
-
-    <TextView
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Friends Fragment" />
+        android:padding="10dp"
+        tools:context=".FirstFragment">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            android:paddingTop="30dp"
+            >
+            <TextView
+                android:id="@+id/layout_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/friends_title"
+                android:textSize="34sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/hidden_controls"
+                    android:visibility="gone"
+                    android:textStyle="bold"
+                    >
 
-</FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Sort By: "
+                        android:textColor="#E1E5F2"
+                        android:textSize="15sp"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/sort_type"
+                        android:textSize="15dp"
+                        android:textColor="#E1E5F2"
+                        android:layout_gravity="center_vertical">
+                    </TextView>
+
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <GridView
+                android:layout_marginTop="10dp"
+                android:id="@+id/dashboard_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="10dp"
+                android:layout_marginBottom="80dp"
+                android:verticalSpacing="10dp" />
+
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

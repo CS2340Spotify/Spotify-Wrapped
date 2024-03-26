@@ -57,20 +57,22 @@ public class MainActivity extends AppCompatActivity {
         Intent login = new Intent(this, LoginActivity.class);
         MainActivity.this.startActivity(login);
 
-        //replaceFragment(new LoginActivity());
+        replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);
 
-//        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-//
-//            int itemId = item.getItemId();
-//            if (itemId == R.id.navigation_home) {
-//                replaceFragment(new HomeFragment());
-//            } else if (itemId == R.id.navigation_profile) {
-//                replaceFragment(new ProfileFragment());
-//            }
-//
-//            return true;
-//        });
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+
+            int itemId = item.getItemId();
+            if (itemId == R.id.navigation_home) {
+                replaceFragment(new HomeFragment());
+            } else if (itemId == R.id.navigation_friends) {
+                replaceFragment(new FriendsFragment());
+            } else if (itemId == R.id.navigation_profile) {
+                replaceFragment(new ProfileFragment());
+            }
+
+            return true;
+        });
 
 
         // Initialize the views
