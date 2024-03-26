@@ -70,6 +70,7 @@ public class SpotifyAuthenticator {
 
 
                     String name = (String) jsonObject.get("display_name");
+
                     String email = (String) jsonObject.get("email");
                     String id = (String) jsonObject.get("id");
                     JSONArray imageArray = (JSONArray) jsonObject.get("images");

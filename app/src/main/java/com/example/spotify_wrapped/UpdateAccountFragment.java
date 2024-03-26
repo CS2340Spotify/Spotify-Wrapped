@@ -39,7 +39,7 @@ public class UpdateAccountFragment extends Fragment {
                 // redirect to SettingsFragment
                 Fragment settingsFragment = new SettingsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, settingsFragment);
+                transaction.replace(R.id.activity_main, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

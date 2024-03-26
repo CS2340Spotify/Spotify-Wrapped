@@ -2,6 +2,9 @@ package com.example.spotify_wrapped;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.content.Intent;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.spotify_wrapped.databinding.ActivityMainBinding;
 
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
@@ -39,15 +43,35 @@ public class MainActivity extends AppCompatActivity {
     private String mAccessToken, mAccessCode;
     private Call mCall;
 
+    private ActivityMainBinding binding;
+
     private TextView tokenTextView, codeTextView, profileTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
 
         Intent login = new Intent(this, LoginActivity.class);
         MainActivity.this.startActivity(login);
+
+        //replaceFragment(new LoginActivity());
+        binding.bottomNavigationView.setBackground(null);
+
+//        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+//
+//            int itemId = item.getItemId();
+//            if (itemId == R.id.navigation_home) {
+//                replaceFragment(new HomeFragment());
+//            } else if (itemId == R.id.navigation_profile) {
+//                replaceFragment(new ProfileFragment());
+//            }
+//
+//            return true;
+//        });
+
 
         // Initialize the views
 //        tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -74,6 +98,14 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
     }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
+
 
     /**
      * Get token from Spotify
