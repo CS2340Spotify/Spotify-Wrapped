@@ -15,6 +15,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.id = id;
+        this.image = image;
         this.password = password;
         this.username = username;
         this.accessToken = accessToken;

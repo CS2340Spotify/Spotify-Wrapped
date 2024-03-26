@@ -9,8 +9,15 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -33,6 +40,9 @@ public class SpotifyAuthenticator {
     private Call call;
     final OkHttpClient okHttpClient = new OkHttpClient();
     final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");;
+
+    private boolean isInDatabase = false;
+    private Boolean callbackComplete;
 
 
 
@@ -67,22 +77,48 @@ public class SpotifyAuthenticator {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
-
-
-                    String name = (String) jsonObject.get("display_name");
-                    String email = (String) jsonObject.get("email");
                     String id = (String) jsonObject.get("id");
-                    JSONArray imageArray = (JSONArray) jsonObject.get("images");
-                    String image;
-                    if (imageArray.isNull(0)) {
-                        image = null;
-                    } else {
-                        JSONObject imageOb = (JSONObject) imageArray.get(1);
-                        image = (String) imageOb.get("url");
-                    }
-                    User newUser = new User(name, email, id, image, password, username, accessToken);
+                    mDatabase.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            Log.wtf("whi", "efefefef");
+                            if (!task.isSuccessful()) {
+                                Log.e("firebase", "Error getting data", task.getException());
+                            }
+                            else {
+                                Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                                if ((task.getResult().getValue()) == null) {
+                                    try {
+                                        String name = (String) jsonObject.get("display_name");
+                                        String email = (String) jsonObject.get("email");
+                                        JSONArray imageArray = (JSONArray) jsonObject.get("images");
+                                        String image;
+                                        if (imageArray.isNull(0)) {
+                                            image = null;
+                                        } else {
+                                            JSONObject imageOb = (JSONObject) imageArray.get(1);
+                                            image = (String) imageOb.get("url");
+                                        }
+                                        User newUser = new User(name, email, id, image, password, username, accessToken);
 
-                    mDatabase.child(id).setValue(newUser);
+                                        mDatabase.child(id).setValue(newUser);
+                                    } catch (JSONException e) {
+                                    }
+
+                                } else {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast toast = Toast.makeText(context, "Signing you in to existing account", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+
+
                 } catch (JSONException e) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -97,6 +133,7 @@ public class SpotifyAuthenticator {
         });
 
     }
+
 
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
