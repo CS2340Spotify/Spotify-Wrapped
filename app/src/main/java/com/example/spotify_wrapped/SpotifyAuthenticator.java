@@ -54,6 +54,7 @@ public class SpotifyAuthenticator {
         AuthorizationClient.openLoginActivity(context, 1, request);
     }
 
+
     public void authenticateWithSpotify(Activity context, String accessToken) {
         Request request = new Request.Builder()
                 .url("https://api.spotify.com/v1/me")

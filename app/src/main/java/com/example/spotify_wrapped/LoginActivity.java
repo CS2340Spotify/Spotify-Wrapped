@@ -39,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
         Button linkSpotify = findViewById(R.id.linkSpotifyButton);
         Button submitSignUp = findViewById(R.id.signup_button);
         Button logInWithSpotify = findViewById(R.id.sign_in_with_spotify);
+        EditText loginEmail = findViewById(R.id.email_sign_in);
+        EditText loginPassword = findViewById(R.id.password_sign_in);
+        Button submitLogin = findViewById(R.id.sign_in_button);
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +90,13 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Please connect to your Spotify account",
                             Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        submitLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = loginEmail.getText().toString();
+                String password = loginPassword.getText().toString();
             }
         });
     }
