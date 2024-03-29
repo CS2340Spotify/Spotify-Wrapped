@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/login_background"
+    android:background="@color/spotify_green"
     tools:context=".UpdateAccountFragment">
 
     <androidx.cardview.widget.CardView
