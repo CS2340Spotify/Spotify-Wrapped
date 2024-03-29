@@ -38,6 +38,10 @@ public class LoginActivity extends AppCompatActivity {
         EditText newPassword = findViewById(R.id.password_sign_up);
         Button linkSpotify = findViewById(R.id.linkSpotifyButton);
         Button submitSignUp = findViewById(R.id.signup_button);
+        Button logInWithSpotify = findViewById(R.id.sign_in_with_spotify);
+        EditText loginEmail = findViewById(R.id.email_sign_in);
+        EditText loginPassword = findViewById(R.id.password_sign_in);
+        Button submitLogin = findViewById(R.id.sign_in_button);
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +65,12 @@ public class LoginActivity extends AppCompatActivity {
                 authenticator.getToken(LoginActivity.this);
             }
         });
+        logInWithSpotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authenticator.trySpotifyLogin(LoginActivity.this);
+            }
+        });
 
         submitSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +92,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        submitLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = loginEmail.getText().toString();
+                String password = loginPassword.getText().toString();
+                authenticator.loginEmailPassword(LoginActivity.this, email, password);
+            }
+        });
     }
 
     @Override
@@ -94,7 +112,8 @@ public class LoginActivity extends AppCompatActivity {
             linkedToSpotify = true;
         } else if (requestCode == 1) {
             accessToken = response.getAccessToken();
-
+            authenticator.authenticateWithSpotify(LoginActivity.this, accessToken);
+            linkedToSpotify = true;
         }
     }
 

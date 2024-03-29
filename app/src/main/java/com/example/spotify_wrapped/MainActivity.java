@@ -27,6 +27,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String CLIENT_ID = "396b2e0e8f1544a98b0d8ffd88484dfd";
@@ -39,15 +41,19 @@ public class MainActivity extends AppCompatActivity {
     private String mAccessToken, mAccessCode;
     private Call mCall;
 
+
     private TextView tokenTextView, codeTextView, profileTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         Intent login = new Intent(this, LoginActivity.class);
         MainActivity.this.startActivity(login);
+
+        setContentView(R.layout.activity_main);
+
 
         // Initialize the views
 //        tokenTextView = (TextView) findViewById(R.id.token_text_view);
