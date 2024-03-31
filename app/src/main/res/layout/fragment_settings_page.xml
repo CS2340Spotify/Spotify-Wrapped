@@ -82,8 +82,8 @@
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:text="Update Profile"
                 android:paddingLeft="25dp"
+                android:text="Update Profile"
                 android:textColor="@color/black"
                 android:textColorHighlight="@color/white"
                 android:textStyle="bold" />
