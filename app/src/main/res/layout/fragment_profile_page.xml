@@ -38,6 +38,7 @@
             app:layout_constraintStart_toEndOf="@id/spotify_logo"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <LinearLayout
             android:id="@+id/icon_background"
             android:layout_width="wrap_content"
@@ -126,6 +127,19 @@
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@id/profile_image"
                     app:layout_constraintTop_toBottomOf="@id/profile_email" />
+
+                <ImageButton
+                    android:id="@+id/settings_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_settings"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
