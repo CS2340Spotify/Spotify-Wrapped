@@ -8,8 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/login_background"
-    tools:context=""> <!-- replace the context when login fragment is created -->
+    android:background="@drawable/login_background">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_sign_in"

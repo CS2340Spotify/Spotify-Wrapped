@@ -12,9 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.GridView;
+import android.widget.Toast;
+
+import com.example.spotify_wrapped.databinding.FriendsLayoutBinding;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+
 public class FriendsFragment extends Fragment {
 
-    private FriendsViewModel mViewModel;
+    private ArrayList<Friend> friends = new ArrayList<>();
+
+    private FriendsLayoutBinding binding;
 
     public static FriendsFragment newInstance() {
         return new FriendsFragment();
@@ -23,14 +35,21 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        binding = FriendsLayoutBinding.inflate(inflater, container, false);
+        GridView grid = binding.friendListView;
+
+        return binding.getRoot();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
-        // TODO: Use the ViewModel
-    }
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        binding.addClassButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+    }
 }
