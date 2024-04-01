@@ -96,8 +96,4 @@ public class WrapActivity extends AppCompatActivity {
             }
         });
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> wrapActivity
