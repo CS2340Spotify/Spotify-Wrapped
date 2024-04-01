@@ -38,7 +38,7 @@ public class UpdateAccountFragment extends Fragment {
                 // redirect to SettingsFragment
                 Fragment settingsFragment = new SettingsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, settingsFragment);
+                transaction.replace(R.id.cardview_update_info, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
