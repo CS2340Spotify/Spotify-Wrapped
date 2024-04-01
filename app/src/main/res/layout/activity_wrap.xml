@@ -51,6 +51,7 @@
         <!-- Rows for artists and songs -->
         <TableRow>
             <TextView
+                android:id="@+id/artist_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Artist 1"
@@ -60,6 +61,7 @@
                 android:textColor="@color/spotify_grey" />
 
             <TextView
+                android:id="@+id/song_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Song 1"
@@ -70,6 +72,7 @@
 
         <TableRow>
             <TextView
+                android:id="@+id/artist_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Artist 2"
@@ -79,6 +82,7 @@
                 android:textColor="@color/black" />
 
             <TextView
+                android:id="@+id/song_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Song 2"
@@ -89,6 +93,7 @@
 
         <TableRow>
             <TextView
+                android:id="@+id/artist_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Artist 3"
@@ -98,6 +103,7 @@
                 android:textColor="@color/black" />
 
             <TextView
+                android:id="@+id/song_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Song 3"
@@ -108,6 +114,7 @@
 
         <TableRow>
             <TextView
+                android:id="@+id/artist_4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Artist 4"
@@ -117,6 +124,7 @@
                 android:textColor="@color/black" />
 
             <TextView
+                android:id="@+id/song_4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Song 4"
@@ -127,6 +135,7 @@
 
         <TableRow>
             <TextView
+                android:id="@+id/artist_5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Artist 5"
@@ -136,6 +145,7 @@
                 android:textColor="@color/black" />
 
             <TextView
+                android:id="@+id/song_5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Song 5"
