@@ -195,6 +195,24 @@ public class SpotifyAuthenticator {
                     });
 
 
+<<<<<<< HEAD
+=======
+                    String name = (String) jsonObject.get("display_name");
+
+                    String email = (String) jsonObject.get("email");
+                    String id = (String) jsonObject.get("id");
+                    JSONArray imageArray = (JSONArray) jsonObject.get("images");
+                    String image;
+                    if (imageArray.isNull(0)) {
+                        image = null;
+                    } else {
+                        JSONObject imageOb = (JSONObject) imageArray.get(1);
+                        image = (String) imageOb.get("url");
+                    }
+                    User newUser = new User(name, email, id, image, password, username, accessToken);
+
+                    mDatabase.child(id).setValue(newUser);
+>>>>>>> bottomNavigation
                 } catch (JSONException e) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
