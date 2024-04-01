@@ -195,8 +195,7 @@ public class SpotifyAuthenticator {
                     });
 
 
-<<<<<<< HEAD
-=======
+
                     String name = (String) jsonObject.get("display_name");
 
                     String email = (String) jsonObject.get("email");
@@ -212,7 +211,6 @@ public class SpotifyAuthenticator {
                     User newUser = new User(name, email, id, image, password, username, accessToken);
 
                     mDatabase.child(id).setValue(newUser);
->>>>>>> bottomNavigation
                 } catch (JSONException e) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override

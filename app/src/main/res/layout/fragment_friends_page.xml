@@ -22,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/circular_std_medium_500"
-        android:text="Friends"
+        android:text="Activity"
         android:paddingBottom="7dp"
         android:background="@drawable/green_underline"
         android:textColor="@color/white"
@@ -70,6 +70,6 @@
         app:layout_constraintTop_toBottomOf="@id/spotify_logo"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="-51dp"
-        tools:listitem="@layout/post_item" />
+        tools:listitem="@layout/item_post" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

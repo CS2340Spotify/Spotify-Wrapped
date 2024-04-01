@@ -39,7 +39,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="black"
+        android:background="@color/spotify_dark"
         android:padding="24dp"
         tools:layout_editor_absoluteX="-206dp"
         tools:layout_editor_absoluteY="0dp">
@@ -51,7 +51,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toTopOf="@+id/comment_edit_text"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/comment_item" />
+            tools:listitem="@layout/item_comment" />
 
         <EditText
             android:id="@+id/comment_edit_text"

@@ -1,5 +1,6 @@
 package com.example.spotify_wrapped;
 
+import android.app.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -9,10 +10,11 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.example.spotify_wrapped.databinding.ActivityMainBinding;
 
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent login = new Intent(this, LoginActivity.class);
         MainActivity.this.startActivity(login);
-        setContentView(R.layout.activity_main);
+
 
         replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);
@@ -69,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
             if (itemId == R.id.navigation_home) {
                 replaceFragment(new HomeFragment());
             } else if (itemId == R.id.navigation_friends) {
-                replaceFragment(new FriendsFragment());
+                // add friends list fragment
             } else if (itemId == R.id.navigation_profile) {
-                replaceFragment(new ProfileFragment());
+                replaceFragment(new SettingsFragment());
             }
 
             return true;

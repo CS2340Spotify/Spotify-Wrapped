@@ -8,25 +8,24 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <!-- Bottom navigation bar implementation -->
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_gravity="bottom|center"
-            android:paddingBottom="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:hideOnScroll="true"
-            app:labelVisibilityMode="labeled"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
-            app:menu="@menu/bottom_nav_menu"
-            style="@style/BottomNavigationStyle">
-        </com.google.android.material.bottomnavigation.BottomNavigationView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_gravity="bottom|center"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hideOnScroll="true"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/bottom_nav_menu"
+        style="@style/BottomNavigationStyle">
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

@@ -38,6 +38,7 @@
             app:layout_constraintStart_toEndOf="@id/spotify_logo"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <LinearLayout
             android:id="@+id/icon_background"
             android:layout_width="wrap_content"
@@ -54,11 +55,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/notification_icon"
+                android:id="@+id/settings_button"
                 android:layout_width="35dp"
                 android:layout_height="33dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/white_notification_icon" />
+                android:src="@drawable/ic_settings" />
 
         </LinearLayout>
 
@@ -127,6 +128,7 @@
                     app:layout_constraintStart_toEndOf="@id/profile_image"
                     app:layout_constraintTop_toBottomOf="@id/profile_email" />
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -153,7 +155,7 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/following_label"
-            tools:listitem="@layout/following_item" />
+            tools:listitem="@layout/item_following" />
 
         <TextView
             android:id="@+id/playlists_label"
@@ -177,7 +179,7 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/playlists_label"
-            tools:listitem="@layout/playlist_item" />
+            tools:listitem="@layout/item_playlist" />
 
         <Button
             android:id="@+id/wraps_button"

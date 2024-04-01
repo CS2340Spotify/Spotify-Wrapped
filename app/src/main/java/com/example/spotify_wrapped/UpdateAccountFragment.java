@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,7 +29,7 @@ public class UpdateAccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_update_account, container, false);
+        View view = inflater.inflate(R.layout.activity_update_account, container, false);
         CardView cardViewUpdateInfo = view.findViewById(R.id.cardview_update_info);
         Button backToSettingsButton = view.findViewById(R.id.back_to_settings);
         backToSettingsButton.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +39,7 @@ public class UpdateAccountFragment extends Fragment {
                 Fragment settingsFragment = new SettingsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.activity_main, settingsFragment);
+                transaction.replace(R.id.cardview_update_info, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
