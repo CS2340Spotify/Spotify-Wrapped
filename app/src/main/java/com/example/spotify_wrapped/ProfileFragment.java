@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Fragment settingsFragment = new SettingsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, settingsFragment);
+                transaction.replace(R.id.cardview_settings_info, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
