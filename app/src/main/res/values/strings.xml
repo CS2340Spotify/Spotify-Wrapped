@@ -1,9 +1,21 @@
 <resources>
     <string name="app_name">spotify-wrapped</string>
+<<<<<<< Updated upstream
     <string name="home_icon">Home</string>
     <string name="friends_icon">Friends</string>
     <string name="search_icon">Search</string>
     <string name="settings_icon">Settings</string>
     <string name="friends_title">Friends</string>
     <string name="search_friends">Search Friends</string>
+=======
+<<<<<<< Updated upstream
+=======
+    <string name="home_icon">Home</string>
+    <string name="friends_icon">Friends</string>
+    <string name="search_icon">Search</string>
+    <string name="profile_icon">Profile</string>
+    <string name="friends_title">Friends</string>
+    <string name="search_friends">Search Friends</string>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 </resources>

@@ -12,7 +12,7 @@
         />
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/settings_icon"
-        android:title="@string/settings_icon"
+        android:icon="@drawable/person"
+        android:title="@string/profile_icon"
         />
 </menu>
