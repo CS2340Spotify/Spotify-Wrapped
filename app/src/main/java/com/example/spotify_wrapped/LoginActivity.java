@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -20,12 +21,14 @@ public class LoginActivity extends AppCompatActivity {
     private SpotifyAuthenticator authenticator;
     private String accessToken;
     private boolean linkedToSpotify = false;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        authenticator = new SpotifyAuthenticator();
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        authenticator = new SpotifyAuthenticator(userViewModel);
 
         CardView cardViewSignIn = findViewById(R.id.cardview_sign_in);
         CardView cardViewSignUp = findViewById(R.id.cardview_sign_up);
