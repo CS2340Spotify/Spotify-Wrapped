@@ -6,4 +6,5 @@
     <color name="spotify_grey">#212121</color>
     <color name="spotify_login_hint">#b3b3b3</color>
     <color name="spotify_dark">#212121</color>
+    <color name="spotify_light">#a7a7a7</color>
 </resources>
