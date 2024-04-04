@@ -22,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/circular_std_medium_500"
-        android:text="Activity"
+        android:text="Home"
         android:paddingBottom="7dp"
         android:background="@drawable/green_underline"
         android:textColor="@color/white"
@@ -57,6 +57,12 @@
             android:layout_height="33dp"
             android:layout_marginStart="16dp"
             android:src="@drawable/white_notification_icon" />
+        <ImageView
+            android:id="@+id/sort_icon"
+            android:layout_width="35dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/white_sort_icon" />
 
     </LinearLayout>
 
