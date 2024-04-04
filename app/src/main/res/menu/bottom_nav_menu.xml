@@ -7,7 +7,7 @@
         android:title="@string/home_icon"
         />
     <item
-        android:id="@+id/navigation_friends"
+        android:id="@+id/navigation_insights"
         android:icon="@drawable/white_insights_icon"
         android:title="@string/insights_icon"
         />
