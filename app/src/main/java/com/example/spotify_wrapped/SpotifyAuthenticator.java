@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,7 +54,11 @@ public class SpotifyAuthenticator {
     private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
     private final DatabaseReference idHash = FirebaseDatabase.getInstance().getReference("id_hash");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private UserViewModel userViewModel;
 
+    public SpotifyAuthenticator(UserViewModel userViewModel) {
+        this.userViewModel = userViewModel;
+    }
 
 
 
@@ -73,6 +78,8 @@ public class SpotifyAuthenticator {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            userViewModel.getUserInformation(user.getUid());
                             context.finish();
                         } else {
                             Toast.makeText(context, "Invalid Credentials",
@@ -108,6 +115,7 @@ public class SpotifyAuthenticator {
                                     Toast.makeText(context, "Spotify account is not linked to this app. Sign up to create an account", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(context, "Logging you in to existing account", Toast.LENGTH_SHORT).show();
+                                    userViewModel.getUserInformation((String) task.getResult().getValue());
                                     context.finish();
                                 }
                             }
@@ -167,15 +175,16 @@ public class SpotifyAuthenticator {
                                             JSONObject imageOb = (JSONObject) imageArray.get(1);
                                             image = (String) imageOb.get("url");
                                         }
-                                        mAuth.createUserWithEmailAndPassword(email, password)
+                                        mAuth.createUserWithEmailAndPassword(email,password)
                                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                                         String appID = mAuth.getCurrentUser().getUid();
                                                         User newUser = new User(name, email, appID, image, password, username, accessToken);
-
                                                         idHash.child(Spotid).setValue(appID);
                                                         mDatabase.child(appID).setValue(newUser);
+                                                        mDatabase.child(appID).child("image").setValue(image);
+                                                        userViewModel.getUserInformation(appID);
                                                     }
                                                 });
                                     } catch (JSONException e) {
@@ -189,28 +198,13 @@ public class SpotifyAuthenticator {
                                             toast.show();
                                         }
                                     });
+                                    String id = (String) task.getResult().getValue();
+                                    userViewModel.getUserInformation(id);
                                 }
                             }
                         }
                     });
 
-
-
-                    String name = (String) jsonObject.get("display_name");
-
-                    String email = (String) jsonObject.get("email");
-                    String id = (String) jsonObject.get("id");
-                    JSONArray imageArray = (JSONArray) jsonObject.get("images");
-                    String image;
-                    if (imageArray.isNull(0)) {
-                        image = null;
-                    } else {
-                        JSONObject imageOb = (JSONObject) imageArray.get(1);
-                        image = (String) imageOb.get("url");
-                    }
-                    User newUser = new User(name, email, id, image, password, username, accessToken);
-
-                    mDatabase.child(id).setValue(newUser);
                 } catch (JSONException e) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -230,7 +224,7 @@ public class SpotifyAuthenticator {
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
                 .setShowDialog(false)
-                .setScopes(new String[] { "user-read-email" }) // <--- Change the scope of your requested token here
+                .setScopes(new String[] { "user-read-email", "user-top-read" }) // <--- Change the scope of your requested token here
                 .setCampaign("your-campaign-token")
                 .build();
     }

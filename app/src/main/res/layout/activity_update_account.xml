@@ -34,6 +34,7 @@
             app:cardCornerRadius="15dp"
             app:cardElevation="20dp">
 
+            {
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,7 +61,7 @@
                         android:paddingBottom="6dp"
                         android:text="Update Account Information"
                         android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
 
                 </LinearLayout>
@@ -127,8 +128,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Save Changes"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_marginTop="50dp"
+
                     android:fontFamily="@font/circular_std_medium_500"
                     android:backgroundTint="@color/spotify_green" />
 
