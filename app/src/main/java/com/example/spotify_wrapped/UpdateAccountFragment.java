@@ -30,15 +30,13 @@ public class UpdateAccountFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_update_account, container, false);
-        CardView cardViewUpdateInfo = view.findViewById(R.id.cardview_update_info);
         Button backToSettingsButton = view.findViewById(R.id.back_to_settings);
         backToSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // redirect to SettingsFragment
-                Fragment settingsFragment = new SettingsFragment();
+                // Redirect to SettingsFragment
+                SettingsFragment settingsFragment = new SettingsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.activity_main, settingsFragment);
                 transaction.replace(R.id.cardview_update_info, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();

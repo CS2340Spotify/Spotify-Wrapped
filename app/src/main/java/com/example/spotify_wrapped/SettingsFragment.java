@@ -1,7 +1,12 @@
 package com.example.spotify_wrapped;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,23 +30,38 @@ public class SettingsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_settings, container, false);
     }
+    View updateProfileBtn;
+    View darkLightBtn;
+    private SharedPreferences sharedPreferences;
+    private boolean isDarkModeEnabled;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        updateProfileBtn = view.findViewById(R.id.update_profile);
+        darkLightBtn = view.findViewById(R.id.dark_light_mode);
+        sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", false);
 
-        View updateProfileBtn = view.findViewById(R.id.update_profile);
+        if(isDarkModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
         // on click listener for the button
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment updateAccountFragment = new UpdateAccountFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.cardview_settings_info, updateAccountFragment);
-                transaction.commit();
+                Intent intent = new Intent(getActivity(), UpdateAccountFragment.class);
+                startActivity(intent);
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
+
     }
 
 //    @Override

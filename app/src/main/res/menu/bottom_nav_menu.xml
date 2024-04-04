@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/house"
+        android:icon="@drawable/white_home_icon"
         android:title="@string/home_icon"
         />
     <item
-        android:id="@+id/navigation_friends"
-        android:icon="@drawable/friends_icon"
-        android:title="@string/friends_icon"
+        android:id="@+id/navigation_insights"
+        android:icon="@drawable/white_insights_icon"
+        android:title="@string/insights_icon"
         />
     <item
         android:id="@+id/navigation_profile"
+<<<<<<< HEAD
         android:icon="@drawable/person"
+=======
+        android:icon="@drawable/white_profile_icon"
+>>>>>>> 674a67dc529c5b62cf6833e451b157aa2e084d91
         android:title="@string/profile_icon"
         />
 </menu>
