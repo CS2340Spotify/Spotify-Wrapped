@@ -109,11 +109,14 @@ public class LoginActivity extends AppCompatActivity {
 
         if (requestCode == 0) {
             accessToken = response.getAccessToken();
-            linkedToSpotify = true;
+            if (accessToken != null) {
+                linkedToSpotify = true;
+            }
         } else if (requestCode == 1) {
             accessToken = response.getAccessToken();
-            authenticator.authenticateWithSpotify(LoginActivity.this, accessToken);
-            linkedToSpotify = true;
+            if (accessToken != null) {
+                authenticator.authenticateWithSpotify(LoginActivity.this, accessToken);
+            }
         }
     }
 
