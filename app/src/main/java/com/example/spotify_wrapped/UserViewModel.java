@@ -206,5 +206,4 @@ public class UserViewModel extends ViewModel {
 
     public User getCurrentUser() {return currentUser;}
 
-
 }

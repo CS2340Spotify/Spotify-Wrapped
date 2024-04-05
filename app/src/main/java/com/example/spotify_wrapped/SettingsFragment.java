@@ -59,12 +59,6 @@ public class SettingsFragment extends Fragment {
                 if (getFragmentManager() != null) {
                     getFragmentManager().popBackStack();
                 }
-
-//                Intent intent = new Intent(getActivity(), UpdateAccountFragment.class);
-//                startActivity(intent);
-//                if (getFragmentManager() != null) {
-//                    getFragmentManager().popBackStack();
-//                }
             }
         });
 
