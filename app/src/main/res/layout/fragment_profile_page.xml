@@ -182,7 +182,7 @@
             tools:listitem="@layout/item_playlist" />
 
         <Button
-            android:id="@+id/wraps_button"
+            android:id="@+id/wrap_button"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="Wrap"

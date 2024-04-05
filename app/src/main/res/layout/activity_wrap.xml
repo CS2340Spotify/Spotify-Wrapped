@@ -7,7 +7,7 @@
     android:background="@drawable/teal_background">
 
     <ImageButton
-        android:id="@+id/back_button"
+        android:id="@+id/wrap_back_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
@@ -19,6 +19,7 @@
         android:src="@drawable/black_back_button" />
 
     <TableLayout
+        android:id="@+id/wrap_table_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="380dp"

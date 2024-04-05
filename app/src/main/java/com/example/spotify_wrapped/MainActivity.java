@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.content.Intent;
@@ -39,12 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int AUTH_TOKEN_REQUEST_CODE = 0;
     public static final int AUTH_CODE_REQUEST_CODE = 1;
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 2;
 
     private final OkHttpClient mOkHttpClient = new OkHttpClient();
     private String mAccessToken, mAccessCode;
     private Call mCall;
 
     private ActivityMainBinding binding;
+
+    private UserViewModel model;
 
     private TextView tokenTextView, codeTextView, profileTextView;
 
@@ -56,7 +60,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent login = new Intent(this, LoginActivity.class);
-        MainActivity.this.startActivity(login);
+        MainActivity.this.startActivityForResult(login, LOGIN_ACTIVITY_REQUEST_CODE);
+
+//        String id = null;
+//        if (getIntent() != null && getIntent().getExtras() != null) {
+//            id = getIntent().getStringExtra("currentUserId");
+//        }
+//        Log.wtf("huh", id);
+//        model = new ViewModelProvider(this).get(UserViewModel.class);
+//        model.getUserInformation(id);
 
 
         replaceFragment(new HomeFragment());
@@ -99,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 //        profileBtn.setOnClickListener((v) -> {
 //            onGetUserProfileClicked();
 //        });
-
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -155,6 +166,16 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Error: " + response.getError(), Toast.LENGTH_SHORT).show();
             }
+        }
+        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String id = intent.getStringExtra("currentUserId");
+                Log.wtf("huh", id);
+                model = new ViewModelProvider(this).get(UserViewModel.class);
+                model.getUserInformation(id);
+
+            }
+
         }
     }
 

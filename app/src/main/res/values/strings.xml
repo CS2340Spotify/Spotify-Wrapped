@@ -2,7 +2,6 @@
     <string name="app_name">spotify-wrapped</string>
     <string name="insights_icon">Insights</string>
     <string name="home_icon">Home</string>
-    <string name="friends_icon">Friends</string>
     <string name="search_icon">Search</string>
     <string name="profile_icon">Profile</string>
     <string name="friends_title">Friends</string>

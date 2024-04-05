@@ -2,6 +2,7 @@ package com.example.spotify_wrapped;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,6 +81,10 @@ public class LoginActivity extends AppCompatActivity {
                     String password = newPassword.getText().toString();
                     try {
                         authenticator.createNewUser(LoginActivity.this, accessToken, username, password);
+                        String id = authenticator.getUserId();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("currentUserId", id);
+                        setResult(RESULT_OK, intent);
                         LoginActivity.this.finish();
                     } catch (IllegalArgumentException e) {
                         Toast.makeText(LoginActivity.this, "Please fill out all fields",
@@ -119,5 +124,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public void onDestroy() {
 
+        super.onDestroy();
+        String id = authenticator.getUserId();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("currentUserId", id);
+        setResult(RESULT_OK, intent);
+//        startActivity(intent);
+//        String id2 = null;
+//        if (getIntent() != null && getIntent().getExtras() != null) {
+//            id2 = getIntent().getExtras().getString("currentUserId");
+//        }
+//        Log.e("id", id2 != null ? id2 : "id2 is null");
+    }
 }

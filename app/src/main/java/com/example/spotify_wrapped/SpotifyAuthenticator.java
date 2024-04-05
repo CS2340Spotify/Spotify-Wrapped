@@ -3,6 +3,7 @@ package com.example.spotify_wrapped;
 import com.example.spotify_wrapped.User;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -55,6 +56,7 @@ public class SpotifyAuthenticator {
     private final DatabaseReference idHash = FirebaseDatabase.getInstance().getReference("id_hash");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private UserViewModel userViewModel;
+    private String userId;
 
     public SpotifyAuthenticator(UserViewModel userViewModel) {
         this.userViewModel = userViewModel;
@@ -80,6 +82,11 @@ public class SpotifyAuthenticator {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             userViewModel.getUserInformation(user.getUid());
+                            userId = user.getUid();
+
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.putExtra("currentUserId", userId);
+                            context.setResult(-1, intent);
                             context.finish();
                         } else {
                             Toast.makeText(context, "Invalid Credentials",
@@ -116,6 +123,10 @@ public class SpotifyAuthenticator {
                                 } else {
                                     Toast.makeText(context, "Logging you in to existing account", Toast.LENGTH_SHORT).show();
                                     userViewModel.getUserInformation((String) task.getResult().getValue());
+                                    userId = (String) task.getResult().getValue();
+                                    Intent intent = new Intent(context, MainActivity.class);
+                                    intent.putExtra("currentUserId", userId);
+                                    context.setResult(-1, intent);
                                     context.finish();
                                 }
                             }
@@ -133,6 +144,12 @@ public class SpotifyAuthenticator {
             }
         });
     }
+
+    public void updateAccessToken(Activity context) {
+        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
+        AuthorizationClient.openLoginActivity(context, 1, request);
+    }
+
 
     public void createNewUser(Activity context, String accessToken, String username, String password) throws IllegalArgumentException {
         if (username.equals("") || password.equals("")) {
@@ -180,6 +197,7 @@ public class SpotifyAuthenticator {
                                                     @Override
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                                         String appID = mAuth.getCurrentUser().getUid();
+                                                        userId = mAuth.getCurrentUser().getUid();
                                                         User newUser = new User(name, email, appID, image, password, username, accessToken);
                                                         idHash.child(Spotid).setValue(appID);
                                                         mDatabase.child(appID).setValue(newUser);
@@ -199,6 +217,7 @@ public class SpotifyAuthenticator {
                                         }
                                     });
                                     String id = (String) task.getResult().getValue();
+                                    userId = id;
                                     userViewModel.getUserInformation(id);
                                 }
                             }
@@ -233,4 +252,7 @@ public class SpotifyAuthenticator {
         return Uri.parse(REDIRECT_URI);
     }
 
+    public String getUserId() {
+        return userId;
+    }
 }

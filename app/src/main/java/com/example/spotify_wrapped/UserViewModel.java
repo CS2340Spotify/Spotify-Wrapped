@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,10 +39,10 @@ public class UserViewModel extends ViewModel {
     private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
 
-
-
-
     public void getUserInformation(String id) {
+        if (id == null) {
+            Log.wtf("what the fuck", "shit is null");
+        }
         user.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -92,7 +95,6 @@ public class UserViewModel extends ViewModel {
                         }
                     } catch (Exception e) {
                         Log.wtf("JSON", "JSON Error");
-
                     }
                 }
             }
@@ -202,6 +204,7 @@ public class UserViewModel extends ViewModel {
 
     }
 
+    public User getCurrentUser() {return currentUser;}
 
 
 }

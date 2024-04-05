@@ -13,11 +13,7 @@
         />
     <item
         android:id="@+id/navigation_profile"
-<<<<<<< HEAD
-        android:icon="@drawable/person"
-=======
         android:icon="@drawable/white_profile_icon"
->>>>>>> 674a67dc529c5b62cf6833e451b157aa2e084d91
         android:title="@string/profile_icon"
         />
 </menu>

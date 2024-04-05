@@ -1,5 +1,9 @@
 package com.example.spotify_wrapped;
 
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 import android.widget.TextView;
 import android.util.Log;
@@ -13,86 +17,62 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 public class WrapActivity extends AppCompatActivity {
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private Call mCall;
     private String mAccessToken;
 
+    private UserViewModel model;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAccessToken = getIntent().getStringExtra("AccessToken");
-        fetchTopArtists();
-        fetchTopSongs();
-    }
+        setContentView(R.layout.activity_wrap);
+        model = new ViewModelProvider(this).get(UserViewModel.class);
 
-    public void fetchTopArtists() {
-        fetchTopItems("https://api.spotify.com/v1/me/top/artists", "artists");
-    }
-
-    public void fetchTopSongs() {
-        fetchTopItems("https://api.spotify.com/v1/me/top/tracks", "songs");
-    }
-
-    public void fetchTopItems(String url, String type) {
-        if (mAccessToken == null) {
-            Toast.makeText(this, "You need to get an access token first!", Toast.LENGTH_SHORT).show();
-            return;
+        List<Artist> topArtistsList = null;
+        List<Track> topTracksList = null;
+        if (model.getCurrentUser().getTop10Artists() != null) {
+            LinkedHashMap<String, Artist> currentUserTopArtists = model.getCurrentUser().getTop10Artists();
+            topArtistsList = new ArrayList<>(currentUserTopArtists.values());
         }
 
-        // Create a request to get the user's top artists
-        final Request request = new Request.Builder()
-                .url(url)
-                .addHeader("Authorization", "Bearer " + mAccessToken)
-                .build();
+        if (model.getCurrentUser().getTop20Tracks() != null) {
+            LinkedHashMap<String, Track> currentUserTopTracks = model.getCurrentUser().getTop20Tracks();
+            topTracksList = new ArrayList<>(currentUserTopTracks.values());
+        }
 
-        mCall = mOkHttpClient.newCall(request);
+        // only need 5 artists and 5 tracks
+        if (topArtistsList != null) {
+            topArtistsList = topArtistsList.subList(0, Math.min(5, topArtistsList.size()));
+        }
+        if (topTracksList != null) {
+            topTracksList = topTracksList.subList(0, Math.min(5, topTracksList.size()));
+        }
 
-        mCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("HTTP", "Failed to fetch data: " + e);
-                Toast.makeText(WrapActivity.this, "Failed to fetch data, watch Logcat for more details",
-                        Toast.LENGTH_SHORT).show();
-            }
+        for (int i = 0; i < topArtistsList.size(); i++) {
+            Artist artist = topArtistsList.get(i);
+            TextView artistTextView = findViewById(getResources().getIdentifier("artist_" + (i + 1), "id", getPackageName()));
+            artistTextView.setText(artist.getName());
+        }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    final JSONObject jsonObject = new JSONObject(response.body().string());
-                    final JSONArray items = jsonObject.getJSONArray("items");
-                    final List<String> topItems = new ArrayList<>();
-                    for (int i = 0; i < Math.min(items.length(), 5); i++) {
-                        JSONObject item = items.getJSONObject(i);
-                        String itemName = item.getString("name");
-                        topItems.add(itemName);
-                    }
-                    if (type.equals("artists")) {
-                        updateUI(topItems, "artist");
-                    } else if (type.equals("songs")) {
-                        updateUI(topItems, "song");
-                    }
-                } catch (JSONException e) {
-                    Log.d("JSON", "Failed to parse data: " + e);
-                    Toast.makeText(WrapActivity.this, "Failed to parse data, watch Logcat for more details",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+        for (int i = 0; i < topTracksList.size(); i++) {
+            Track track = topTracksList.get(i);
+            TextView trackTextView = findViewById(getResources().getIdentifier("song_" + (i + 1), "id", getPackageName()));
+            trackTextView.setText(track.getTrackName());
+        }
 
-    private void updateUI(List<String> items, String type) {
-        // Update your UI to display the top items
-        runOnUiThread(() -> {
-            for (int i = 0; i < items.size(); i++) {
-                String itemName = items.get(i);
-                int textViewId = getResources().getIdentifier(type + "_" + (i + 1), "id", getPackageName());
-                TextView textView = findViewById(textViewId);
-                textView.setText(itemName);
+        ImageButton wrappedBackButton = findViewById(R.id.wrap_back_button);
+        wrappedBackButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
             }
         });
     }
