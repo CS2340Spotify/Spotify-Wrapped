@@ -16,15 +16,7 @@
             android:name=".UpdateAccountActivity"
             android:exported="false" />
         <activity
-            android:name=".test"
-            android:exported="false" />
-        <activity
-            android:name=".UpdateAccount2"
-            android:exported="false"
-            android:label="@string/title_activity_update_account2"
-            android:theme="@style/Theme.Spotifywrapped" />
-        <activity
-            android:name=".Settings2"
+            android:name=".SettingsFragment"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
