@@ -1,6 +1,8 @@
 package com.example.spotify_wrapped;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,7 +11,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +41,7 @@ public class UserViewModel extends ViewModel {
     private Call call;
 
     private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
+
     private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
 
@@ -203,7 +209,40 @@ public class UserViewModel extends ViewModel {
         });
 
     }
+    public void updateUserInformation(User updatedUser, Context context) {
+        String userId = updatedUser.getId();
+
+        HashMap<String, Object> updates = new HashMap<>();
+        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+            updates.put("name", updatedUser.getName());
+        }
+        if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
+            updates.put("username", updatedUser.getUsername());
+        }
+        if (!TextUtils.isEmpty(updatedUser.getPassword()) && !updatedUser.getPassword().equals(currentUser.getPassword())) {
+            updates.put("password", updatedUser.getPassword());
+        }
+
+        if (!updates.isEmpty()) {
+            user.child(userId).updateChildren(updates)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Error updating user information: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(context, "No changes made", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public User getCurrentUser() {return currentUser;}
+
 
 }

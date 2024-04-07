@@ -1,5 +1,8 @@
 package com.example.spotify_wrapped;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -9,7 +12,7 @@ public class User {
     private String id;
     private String image;
     private String password;
-
+    private MutableLiveData<UpdateStatus> updateStatus = new MutableLiveData<>();
     private String username;
 
     private String accessToken;
@@ -68,4 +71,5 @@ public class User {
     }
     public LinkedHashMap<String, Track> getTop20Tracks(){return this.top20Tracks;}
     public LinkedHashMap<String, Artist> getTop10Artists() { return this.top10Artists;}
+    public LiveData<UpdateStatus> getUpdateStatus() { return updateStatus;}
 }
