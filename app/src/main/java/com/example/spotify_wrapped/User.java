@@ -17,8 +17,8 @@ public class User {
 
     private String accessToken;
     private ArrayList<String> friends;
-    private LinkedHashMap<String, Artist> top10Artists = new LinkedHashMap<>(20);
-    private LinkedHashMap<String, Track> top20Tracks = new LinkedHashMap<>(30);
+    private LinkedHashMap<String, Artist> topTenArtists = new LinkedHashMap<>(20);
+    private LinkedHashMap<String, Track> topTwentyArtists = new LinkedHashMap<>(30);
 
     public User (String name, String email, String id, String image, String password, String username, String accessToken) {
         this.name = name;
@@ -61,15 +61,15 @@ public class User {
     }
 
     public void setArtist(String key, Artist artist) {
-        top10Artists.put(key, artist);
+        topTenArtists.put(key, artist);
     }
     public Artist getArtist(String key) {
-        return top10Artists.get(key);
+        return topTenArtists.get(key);
     }
     public void setTrack(String key, Track track) {
-        top20Tracks.put(key, track);
+        topTwentyArtists.put(key, track);
     }
-    public LinkedHashMap<String, Track> getTop20Tracks(){return this.top20Tracks;}
-    public LinkedHashMap<String, Artist> getTop10Artists() { return this.top10Artists;}
+    public LinkedHashMap<String, Track> getTop20Tracks(){return this.topTwentyArtists;}
+    public LinkedHashMap<String, Artist> getTop10Artists() { return this.topTenArtists;}
     public LiveData<UpdateStatus> getUpdateStatus() { return updateStatus;}
 }
