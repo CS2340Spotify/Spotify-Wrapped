@@ -2,6 +2,7 @@ package com.example.spotify_wrapped;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,10 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.spotify_wrapped.SpotifyAuthenticator;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 
@@ -23,12 +22,14 @@ public class LoginActivity extends AppCompatActivity {
     private SpotifyAuthenticator authenticator;
     private String accessToken;
     private boolean linkedToSpotify = false;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-        authenticator = new SpotifyAuthenticator();
+        setContentView(R.layout.activity_login);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        authenticator = new SpotifyAuthenticator(userViewModel);
 
         CardView cardViewSignIn = findViewById(R.id.cardview_sign_in);
         CardView cardViewSignUp = findViewById(R.id.cardview_sign_up);
@@ -38,6 +39,10 @@ public class LoginActivity extends AppCompatActivity {
         EditText newPassword = findViewById(R.id.password_sign_up);
         Button linkSpotify = findViewById(R.id.linkSpotifyButton);
         Button submitSignUp = findViewById(R.id.signup_button);
+        Button logInWithSpotify = findViewById(R.id.sign_in_with_spotify);
+        EditText loginEmail = findViewById(R.id.email_sign_in);
+        EditText loginPassword = findViewById(R.id.password_sign_in);
+        Button submitLogin = findViewById(R.id.sign_in_button);
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +66,12 @@ public class LoginActivity extends AppCompatActivity {
                 authenticator.getToken(LoginActivity.this);
             }
         });
+        logInWithSpotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authenticator.trySpotifyLogin(LoginActivity.this);
+            }
+        });
 
         submitSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +81,10 @@ public class LoginActivity extends AppCompatActivity {
                     String password = newPassword.getText().toString();
                     try {
                         authenticator.createNewUser(LoginActivity.this, accessToken, username, password);
+                        String id = authenticator.getUserId();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("currentUserId", id);
+                        setResult(RESULT_OK, intent);
                         LoginActivity.this.finish();
                     } catch (IllegalArgumentException e) {
                         Toast.makeText(LoginActivity.this, "Please fill out all fields",
@@ -82,6 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        submitLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = loginEmail.getText().toString();
+                String password = loginPassword.getText().toString();
+                authenticator.loginEmailPassword(LoginActivity.this, email, password);
+            }
+        });
     }
 
     @Override
@@ -91,11 +114,29 @@ public class LoginActivity extends AppCompatActivity {
 
         if (requestCode == 0) {
             accessToken = response.getAccessToken();
-            linkedToSpotify = true;
+            if (accessToken != null) {
+                linkedToSpotify = true;
+            }
         } else if (requestCode == 1) {
             accessToken = response.getAccessToken();
-
+            if (accessToken != null) {
+                authenticator.authenticateWithSpotify(LoginActivity.this, accessToken);
+            }
         }
     }
+    @Override
+    public void onDestroy() {
 
+        super.onDestroy();
+        String id = authenticator.getUserId();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("currentUserId", id);
+        setResult(RESULT_OK, intent);
+//        startActivity(intent);
+//        String id2 = null;
+//        if (getIntent() != null && getIntent().getExtras() != null) {
+//            id2 = getIntent().getExtras().getString("currentUserId");
+//        }
+//        Log.e("id", id2 != null ? id2 : "id2 is null");
+    }
 }

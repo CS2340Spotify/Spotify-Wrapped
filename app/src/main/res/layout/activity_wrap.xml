@@ -1,0 +1,202 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/teal_background">
+
+    <ImageButton
+        android:id="@+id/wrap_back_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="368dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/black_back_button" />
+
+    <TableLayout
+        android:id="@+id/wrap_table_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="380dp"
+        android:stretchColumns="*"
+        tools:ignore="ExtraText">
+        <!-- Header Row -->
+        <TableRow>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Top Artists"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="16dp"
+                android:fontFamily="@font/circular_std_medium_500" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:text="Top Songs"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <!-- Rows for artists and songs -->
+        <TableRow>
+            <TextView
+                android:id="@+id/artist_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Artist 1"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:layout_marginLeft="16dp"
+                android:textSize="20sp"
+                android:textColor="@color/spotify_grey" />
+
+            <TextView
+                android:id="@+id/song_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Song 1"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/artist_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Artist 2"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:layout_marginLeft="16dp"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/song_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Song 2"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/artist_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Artist 3"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:layout_marginLeft="16dp"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/song_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Song 3"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/artist_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Artist 4"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:layout_marginLeft="16dp"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/song_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Song 4"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/artist_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Artist 5"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:layout_marginLeft="16dp"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/song_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Song 5"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Minutes"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="16dp"
+                android:fontFamily="@font/circular_std_medium_500" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Top Genre"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="7dp"
+                android:fontFamily="@font/circular_std_medium_500" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Minutes"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:layout_marginLeft="16dp"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Genre"
+                android:fontFamily="@font/circular_std_medium_500"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>

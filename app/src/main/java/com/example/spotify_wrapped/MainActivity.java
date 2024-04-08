@@ -1,16 +1,20 @@
 package com.example.spotify_wrapped;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.example.spotify_wrapped.databinding.ActivityMainBinding;
 
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
@@ -27,6 +31,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String CLIENT_ID = "396b2e0e8f1544a98b0d8ffd88484dfd";
@@ -34,20 +40,53 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int AUTH_TOKEN_REQUEST_CODE = 0;
     public static final int AUTH_CODE_REQUEST_CODE = 1;
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 2;
 
     private final OkHttpClient mOkHttpClient = new OkHttpClient();
     private String mAccessToken, mAccessCode;
     private Call mCall;
 
+    private ActivityMainBinding binding;
+
+    private UserViewModel model;
+
     private TextView tokenTextView, codeTextView, profileTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         Intent login = new Intent(this, LoginActivity.class);
-        MainActivity.this.startActivity(login);
+        MainActivity.this.startActivityForResult(login, LOGIN_ACTIVITY_REQUEST_CODE);
+
+//        String id = null;
+//        if (getIntent() != null && getIntent().getExtras() != null) {
+//            id = getIntent().getStringExtra("currentUserId");
+//        }
+//        Log.wtf("huh", id);
+//        model = new ViewModelProvider(this).get(UserViewModel.class);
+//        model.getUserInformation(id);
+
+
+        replaceFragment(new HomeFragment());
+        binding.bottomNavigationView.setBackground(null);
+
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+
+            int itemId = item.getItemId();
+            if (itemId == R.id.navigation_home) {
+                replaceFragment(new HomeFragment());
+            } else if (itemId == R.id.navigation_insights) {
+                replaceFragment(new InsightsFragment());
+            } else if (itemId == R.id.navigation_profile) {
+                replaceFragment(new ProfileFragment());
+            }
+
+            return true;
+        });
 
         // Initialize the views
 //        tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -72,8 +111,15 @@ public class MainActivity extends AppCompatActivity {
 //        profileBtn.setOnClickListener((v) -> {
 //            onGetUserProfileClicked();
 //        });
-
     }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
+
 
     /**
      * Get token from Spotify
@@ -120,6 +166,16 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Error: " + response.getError(), Toast.LENGTH_SHORT).show();
             }
+        }
+        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String id = intent.getStringExtra("currentUserId");
+                Log.wtf("huh", id);
+                model = new ViewModelProvider(this).get(UserViewModel.class);
+                model.getUserInformation(id);
+
+            }
+
         }
     }
 
