@@ -15,10 +15,15 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LLMQueryManager {
-    public static final String API_KEY = BuildConfig.OPENAI_API_KEY;
-    final OkHttpClient okHttpClient = new OkHttpClient();
+    public static String API_KEY;
+    final OkHttpClient okHttpClient;
 
     private Call call;
+
+    public LLMQueryManager() {
+        okHttpClient = new OkHttpClient();
+        API_KEY = BuildConfig.OPENAI_API_KEY;
+    }
 
     public void queryPrompt(String prompt) throws JSONException {
         String body = "{" +

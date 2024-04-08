@@ -1,5 +1,6 @@
 package com.example.spotify_wrapped;
 
+import org.json.JSONException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,7 +16,9 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
-    public void test_llmQuery() {
-        LLMQueryManager manager;
+    @Test
+    public void test_llmQuery() throws JSONException {
+        LLMQueryManager manager = new LLMQueryManager();
+        manager.queryPrompt("I love listening to Drake");
     }
 }
