@@ -12,13 +12,13 @@ public class User {
     private String id;
     private String image;
     private String password;
-    private MutableLiveData<UpdateStatus> updateStatus = new MutableLiveData<>();
+
     private String username;
 
     private String accessToken;
     private ArrayList<String> friends;
     private LinkedHashMap<String, Artist> topTenArtists = new LinkedHashMap<>(20);
-    private LinkedHashMap<String, Track> topTwentyArtists = new LinkedHashMap<>(30);
+    private LinkedHashMap<String, Track> topTwentyTracks = new LinkedHashMap<>(30);
 
     public User (String name, String email, String id, String image, String password, String username, String accessToken) {
         this.name = name;
@@ -67,9 +67,9 @@ public class User {
         return topTenArtists.get(key);
     }
     public void setTrack(String key, Track track) {
-        topTwentyArtists.put(key, track);
+        topTwentyTracks.put(key, track);
     }
-    public LinkedHashMap<String, Track> getTop20Tracks(){return this.topTwentyArtists;}
-    public LinkedHashMap<String, Artist> getTop10Artists() { return this.topTenArtists;}
-    public LiveData<UpdateStatus> getUpdateStatus() { return updateStatus;}
+
+    public LinkedHashMap<String, Track> getTopTwentyTracks(){return this.topTwentyTracks;}
+    public LinkedHashMap<String, Artist> getTopTenArtists() { return this.topTenArtists;}
 }

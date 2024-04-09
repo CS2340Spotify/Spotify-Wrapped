@@ -151,7 +151,7 @@ public class UserViewModel extends ViewModel {
                         currentUser.setTrack(String.valueOf(i + 1), newTrack);
 
                     }
-                    user.child(currentUser.getId()).child("topTracks").setValue(currentUser.getTop20Tracks());
+                    user.child(currentUser.getId()).child("topTracks").setValue(currentUser.getTopTwentyTracks());
 
                 } catch (Exception e) {
                     Log.wtf("Http", e.getMessage());
@@ -199,7 +199,7 @@ public class UserViewModel extends ViewModel {
 
 //                        user.child(currentUser.getId()).child("topArtists").push().setValue(newArtist);
                     }
-                    user.child(currentUser.getId()).child("topArtists").setValue(currentUser.getTop10Artists());
+                    user.child(currentUser.getId()).child("topArtists").setValue(currentUser.getTopTenArtists());
 
                 } catch (Exception e) {
                     Log.wtf("Http", e.getMessage());

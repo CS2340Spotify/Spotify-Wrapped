@@ -25,14 +25,17 @@ public class LLMQueryManager {
         API_KEY = BuildConfig.OPENAI_API_KEY;
     }
 
-    public void queryPrompt(String prompt) throws JSONException {
+    public Response queryPrompt(String prompt) throws IOException {
+        System.out.println("QUERYING PROMPT");
         String body = "{" +
                 "\"model\":\"gpt-3.5-turbo\", " +
-                "messages: [{\"role\":\"system\", \"content\": " +
+                "\"response_format\": {\"type\": \"json_object\"}," +
+                "\"messages\": [{\"role\":\"system\", \"content\": " +
                 "\"You are a spotify assistant with the goal of describing users based on their music taste. " +
-                "\nYou will be given information about the user and should describe things like how they would act, think, and dress.}," +
-                "{\"role\": \"user\", \"content\":" + prompt + "}]";
-        RequestBody reqBody = RequestBody.create(body, MediaType.parse("application/json"));
+                "You will be given information about the user and should describe things like how they would act, think, and dress. " +
+                "Return this information in a single array in JSON format named preferences, containing at least ten pieces of information.\"}," +
+                "{\"role\": \"user\", \"content\":\"" + prompt + "\"}]}";
+        RequestBody reqBody = RequestBody.create(body, MediaType.parse("application/json; charset=utf-8"));
 
         Request request = new Request.Builder()
                 .url("https://api.openai.com/v1/chat/completions")
@@ -41,15 +44,6 @@ public class LLMQueryManager {
                 .build();
         call = okHttpClient.newCall(request);
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("HTTP", "Failed to fetch data: " + e);
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response);
-            }
-        });
+        return call.execute();
     }
 }
