@@ -54,7 +54,7 @@ public class SettingsFragment extends Fragment {
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UpdateAccountFragment.class);
+                Intent intent = new Intent(getActivity(), UpdateAccountActivity.class);
                 startActivity(intent);
                 if (getFragmentManager() != null) {
                     getFragmentManager().popBackStack();
