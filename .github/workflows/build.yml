@@ -1,0 +1,32 @@
+name: Build APK Release
+
+env:
+  # The name of the main module repository
+  main_project_module: app
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '18'
+          cache: 'gradle'
+
+      - name: Build gradle project
+        run: ./gradlew build
