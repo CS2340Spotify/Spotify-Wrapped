@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/spotify_green"
+    android:background="@color/spotify_medium_grey"
     tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
