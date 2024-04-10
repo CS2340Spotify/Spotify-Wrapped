@@ -55,7 +55,16 @@ public class ProfileFragment extends Fragment {
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setVisibility(View.VISIBLE);
 
+        View settingsButton = view.findViewById(R.id.settings_button);
         View wrapButton = view.findViewById(R.id.wrap_button);
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new SettingsFragment());
+            }
+        });
+
         wrapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
