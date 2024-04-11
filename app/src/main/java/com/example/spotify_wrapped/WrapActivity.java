@@ -39,15 +39,15 @@ public class WrapActivity extends AppCompatActivity {
 
         List<Artist> topArtistsList = null;
         List<Track> topTracksList = null;
-        if (model.getCurrentUser().getTop10Artists() != null) {
-            LinkedHashMap<String, Artist> currentUserTopArtists = model.getCurrentUser().getTop10Artists();
-            topArtistsList = new ArrayList<>(currentUserTopArtists.values());
-        }
-
-        if (model.getCurrentUser().getTop20Tracks() != null) {
-            LinkedHashMap<String, Track> currentUserTopTracks = model.getCurrentUser().getTop20Tracks();
-            topTracksList = new ArrayList<>(currentUserTopTracks.values());
-        }
+//        if (model.getCurrentUser().getTop10Artists() != null) {
+//            LinkedHashMap<String, Artist> currentUserTopArtists = model.getCurrentUser().getTop10Artists();
+//            topArtistsList = new ArrayList<>(currentUserTopArtists.values());
+//        }
+//
+//        if (model.getCurrentUser().getTop20Tracks() != null) {
+//            LinkedHashMap<String, Track> currentUserTopTracks = model.getCurrentUser().getTop20Tracks();
+//            topTracksList = new ArrayList<>(currentUserTopTracks.values());
+//        }
 
         // only need 5 artists and 5 tracks
         if (topArtistsList != null) {

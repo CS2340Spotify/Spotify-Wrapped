@@ -81,7 +81,6 @@ public class SpotifyAuthenticator {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            userViewModel.getUserInformation(user.getUid());
                             userId = user.getUid();
 
                             Intent intent = new Intent(context, MainActivity.class);
@@ -122,7 +121,6 @@ public class SpotifyAuthenticator {
                                     Toast.makeText(context, "Spotify account is not linked to this app. Sign up to create an account", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(context, "Logging you in to existing account", Toast.LENGTH_SHORT).show();
-                                    userViewModel.getUserInformation((String) task.getResult().getValue());
                                     userId = (String) task.getResult().getValue();
                                     Intent intent = new Intent(context, MainActivity.class);
                                     intent.putExtra("currentUserId", userId);
