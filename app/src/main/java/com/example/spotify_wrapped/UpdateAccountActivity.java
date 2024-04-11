@@ -38,8 +38,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
                 // creating user object with updated information
                 User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken");
-
-
                 mViewModel.updateUserInformation(updatedUser, UpdateAccountActivity.this);
             }
         });

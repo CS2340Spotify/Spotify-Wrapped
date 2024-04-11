@@ -241,6 +241,7 @@ public class UserViewModel extends ViewModel {
             Toast.makeText(context, "No changes made", Toast.LENGTH_SHORT).show();
         }
     }
+   // public void deleteAccount()
 
     public User getCurrentUser() {return currentUser;}
 

@@ -32,6 +32,12 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 }
