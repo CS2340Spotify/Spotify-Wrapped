@@ -24,6 +24,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -61,15 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent login = new Intent(this, LoginActivity.class);
         MainActivity.this.startActivityForResult(login, LOGIN_ACTIVITY_REQUEST_CODE);
-
-//        String id = null;
-//        if (getIntent() != null && getIntent().getExtras() != null) {
-//            id = getIntent().getStringExtra("currentUserId");
-//        }
-//        Log.wtf("huh", id);
-//        model = new ViewModelProvider(this).get(UserViewModel.class);
-//        model.getUserInformation(id);
-
 
         replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);

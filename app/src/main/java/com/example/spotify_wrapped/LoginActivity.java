@@ -81,12 +81,10 @@ public class LoginActivity extends AppCompatActivity {
                     String password = newPassword.getText().toString();
                     try {
                         authenticator.createNewUser(LoginActivity.this, accessToken, username, password);
-                        String id = authenticator.getUserId();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("currentUserId", id);
-                        setResult(RESULT_OK, intent);
-                        LoginActivity.this.finish();
                     } catch (IllegalArgumentException e) {
+                        Toast.makeText(LoginActivity.this, "Please fill out all fields",
+                                Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
                         Toast.makeText(LoginActivity.this, "Please fill out all fields",
                                 Toast.LENGTH_SHORT).show();
                     }

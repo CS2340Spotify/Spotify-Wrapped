@@ -202,7 +202,11 @@ public class SpotifyAuthenticator {
                                                         idHash.child(Spotid).setValue(appID);
                                                         mDatabase.child(appID).setValue(newUser);
                                                         mDatabase.child(appID).child("image").setValue(image);
-                                                        userViewModel.getUserInformation(appID);
+
+                                                        Intent intent = new Intent(context, MainActivity.class);
+                                                        intent.putExtra("currentUserId", appID);
+                                                        context.setResult(-1, intent);
+                                                        context.finish();
                                                     }
                                                 });
                                     } catch (JSONException e) {
@@ -217,8 +221,11 @@ public class SpotifyAuthenticator {
                                         }
                                     });
                                     String id = (String) task.getResult().getValue();
-                                    userId = id;
-                                    userViewModel.getUserInformation(id);
+
+                                    Intent intent = new Intent(context, MainActivity.class);
+                                    intent.putExtra("currentUserId", id);
+                                    context.setResult(-1, intent);
+                                    context.finish();
                                 }
                             }
                         }
