@@ -1,5 +1,12 @@
 package com.example.spotify_wrapped;
 
+import static com.example.spotify_wrapped.UserItemTimeFrame.LONG;
+import static com.example.spotify_wrapped.UserItemTimeFrame.MEDIUM;
+import static com.example.spotify_wrapped.UserItemTimeFrame.SHORT;
+
+import  com.example.spotify_wrapped.UserItemTimeFrame;
+
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.text.TextUtils;
@@ -45,7 +52,7 @@ public class UserViewModel extends ViewModel {
     private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
 
-    public void getUserInformation(String id) {
+    public void getUserInformation(String id, Activity context) {
         if (id == null) {
             Log.wtf("what the fuck", "shit is null");
         }
@@ -64,41 +71,53 @@ public class UserViewModel extends ViewModel {
                         String username = (String) vals.get("username");
                         String accessToken = (String) vals.get("accessToken");
                         currentUser = new User(name, email, id, image, password, username, accessToken);
-                        if (vals.get("topArtists") == null) {
-                            getArtistsFromSpotify();
-                        } else {
-                            ArrayList<HashMap<String,Object>> artists = (ArrayList<HashMap<String, Object>>) vals.get("topArtists");
-                            for (int i = 1; i <= 10; i++) {
-                                HashMap<String, Object> artist = (HashMap<String, Object>) artists.get(i);
-                                String artistImage = (String) artist.get("image");
-                                String artistName = (String) artist.get("name");
-                                String artistId = (String) artist.get("id");
-                                Artist newArtist = new Artist(artistName, artistImage, artistId);
-                                ArrayList<String> genres = (ArrayList<String>) artist.get("genres");
-                                for (int j = 1; j < genres.size(); j++) {
-                                    newArtist.setGenres(String.valueOf(j), genres.get(j));
-                                }
-                                currentUser.setArtist(String.valueOf(i), newArtist);
+//                        makeNewWrapped(SHORT, context);
+//                        makeNewWrapped(MEDIUM, context);
+//                        makeNewWrapped(LONG, context);
+                        if (vals.get("wraps") != null) {
+                            ArrayList<HashMap<String,Object>> wraps = (ArrayList<HashMap<String, Object>>) vals.get("wraps");
+                            for (int i = 0; i < wraps.size(); i++) {
+                                HashMap<String, Object> wrap = (HashMap<String, Object>) wraps.get(i);
+                                Wrap newWrap = new Wrap(wrap);
+                                currentUser.setWrap(String.valueOf(i), newWrap);
                             }
                         }
-                        if (vals.get("topTracks") == null) {
-                            getTracksFromSpotify();;
-                        } else {
-                            ArrayList<HashMap<String,Object>> tracks = (ArrayList<HashMap<String, Object>>) vals.get("topTracks");
-                            for (int i = 1; i <= 20; i++) {
-                                HashMap<String, Object> track = (HashMap<String, Object>) tracks.get(i);
-                                String albumImage = (String) track.get("albumImage");
-                                String albumName = (String) track.get("albumName");
-                                String id = (String) track.get("id");
-                                String trackName = (String) track.get("trackName");
-                                Track newTrack = new Track(trackName, albumName, albumImage, id);
-                                ArrayList<String> artists = (ArrayList<String>) track.get("artists");
-                                for (int j = 1; j < artists.size(); j++) {
-                                    newTrack.setArtists(String.valueOf(j), artists.get(j));
-                                }
-                                currentUser.setTrack(String.valueOf(i), newTrack);
-                            }
-                        }
+                        System.out.println("hi");
+//                        if (vals.get("topArtists") == null) {
+//                            getArtistsFromSpotify();
+//                        } else {
+//                            ArrayList<HashMap<String,Object>> artists = (ArrayList<HashMap<String, Object>>) vals.get("topArtists");
+//                            for (int i = 1; i <= 10; i++) {
+//                                HashMap<String, Object> artist = (HashMap<String, Object>) artists.get(i);
+//                                String artistImage = (String) artist.get("image");
+//                                String artistName = (String) artist.get("name");
+//                                String artistId = (String) artist.get("id");
+//                                Artist newArtist = new Artist(artistName, artistImage, artistId);
+//                                ArrayList<String> genres = (ArrayList<String>) artist.get("genres");
+//                                for (int j = 1; j < genres.size(); j++) {
+//                                    newArtist.setGenres(String.valueOf(j), genres.get(j));
+//                                }
+//                                currentUser.setArtist(String.valueOf(i), newArtist);
+//                            }
+//                        }
+//                        if (vals.get("topTracks") == null) {
+//                            getTracksFromSpotify();;
+//                        } else {
+//                            ArrayList<HashMap<String,Object>> tracks = (ArrayList<HashMap<String, Object>>) vals.get("topTracks");
+//                            for (int i = 1; i <= 20; i++) {
+//                                HashMap<String, Object> track = (HashMap<String, Object>) tracks.get(i);
+//                                String albumImage = (String) track.get("albumImage");
+//                                String albumName = (String) track.get("albumName");
+//                                String id = (String) track.get("id");
+//                                String trackName = (String) track.get("trackName");
+//                                Track newTrack = new Track(trackName, albumName, albumImage, id);
+//                                ArrayList<String> artists = (ArrayList<String>) track.get("artists");
+//                                for (int j = 1; j < artists.size(); j++) {
+//                                    newTrack.setArtists(String.valueOf(j), artists.get(j));
+//                                }
+//                                currentUser.setTrack(String.valueOf(i), newTrack);
+//                            }
+//                        }
                     } catch (Exception e) {
                         Log.wtf("JSON", "JSON Error");
                     }
@@ -107,11 +126,63 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    private void getTracksFromSpotify() {
-        Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me/top/tracks?offset=0&limit=20")
-                .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
-                .build();
+    /**
+     * Returns a new wrapped with one of the set time frames given by the spotify API. Another
+     * method will generate a wrapped for a custom time frame. The new wrapped is added to the
+     * current user's list of wraps and saved in Firebase.
+     */
+    public Wrap makeNewWrapped(UserItemTimeFrame time, Activity context) {
+        Long dateNow = System.currentTimeMillis() / 1000L;
+        Long dateFrom;
+        if (time == LONG) {
+            dateFrom = dateNow - 31556926L;
+        } else if (time == MEDIUM) {
+            dateFrom = dateNow - 15778458L;
+        } else {
+            dateFrom = dateNow - 2629743L;
+        }
+        Wrap newWrap = new Wrap(dateNow, dateFrom);
+        getTracksFromSpotify(time, newWrap, context);
+        synchronized(newWrap.getTopTracks()) {
+            try {
+                newWrap.getTopTracks().wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        getArtistsFromSpotify(time, newWrap, context);
+        synchronized(newWrap.getTopArtists()) {
+            try {
+                newWrap.getTopArtists().wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        currentUser.setWrap(String.valueOf(currentUser.getUserWraps().size()), newWrap);
+        user.child(currentUser.getId()).child("wraps").setValue(currentUser.getUserWraps());
+        return newWrap;
+    }
+
+
+    private void getTracksFromSpotify(UserItemTimeFrame time, Wrap wrap, Activity context) {
+        Request request;
+        if (time == MEDIUM) {
+            request = new Request.Builder()
+                    .url("https://api.spotify.com/v1/me/top/tracks?offset=0&limit=5")
+                    .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                    .build();
+        } else  if (time == LONG) {
+            request = new Request.Builder()
+                    .url("https://api.spotify.com/v1/me/top/tracks?time_range=long_term&offset=0&limit=5")
+                    .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                    .build();
+
+        } else {
+            request = new Request.Builder()
+                    .url("https://api.spotify.com/v1/me/top/tracks?time_range=short_term&offset=0&limit=5")
+                    .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                    .build();
+        }
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -148,10 +219,14 @@ public class UserViewModel extends ViewModel {
                         }
 //                        Artist newArtist = new Artist(name, imageUrl, id);
 //
-                        currentUser.setTrack(String.valueOf(i + 1), newTrack);
+                        wrap.setTrack(String.valueOf(i + 1), newTrack);
 
                     }
-                    user.child(currentUser.getId()).child("topTracks").setValue(currentUser.getTop20Tracks());
+                    synchronized (wrap.getTopTracks()) {
+                        wrap.getTopTracks().notify();
+
+                    }
+//                    user.child(currentUser.getId()).child("topTracks").setValue(currentUser.getTop20Tracks());
 
                 } catch (Exception e) {
                     Log.wtf("Http", e.getMessage());
@@ -160,11 +235,25 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    private void getArtistsFromSpotify() {
-        Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me/top/artists?offset=0&limit=10")
-                .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
-                .build();
+    private void getArtistsFromSpotify(UserItemTimeFrame time, Wrap wrap, Activity context) {
+        Request request;
+        if (time == MEDIUM) {
+            request = new Request.Builder()
+                    .url("https://api.spotify.com/v1/me/top/artists?offset=0&limit=5")
+                    .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                    .build();
+        } else  if (time == LONG) {
+            request = new Request.Builder()
+                    .url("https://api.spotify.com/v1/me/top/artists?time_range=long_term&offset=0&limit=5")
+                    .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                    .build();
+
+        } else {
+            request = new Request.Builder()
+                    .url("https://api.spotify.com/v1/me/top/artists?time_range=short_term&offset=0&limit=5")
+                    .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                    .build();
+        }
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback(){
             @Override
@@ -191,15 +280,23 @@ public class UserViewModel extends ViewModel {
                         }
                         Artist newArtist = new Artist(name, imageUrl, id);
                         JSONArray genres = (JSONArray) artist.get("genres");
+                        int k = 0;
                         for (int j = 0; j < genres.length(); j++) {
-                            newArtist.setGenres(String.valueOf(j + 1), (String) genres.get(j));
+                            if (!wrap.getTopGenres().containsValue((String) genres.get(j))) {
+                                wrap.setGenre(String.valueOf(k + 1), (String) genres.get(j));
+                                k++;
+                            }
                         }
-                        currentUser.setArtist(String.valueOf(i + 1), newArtist);
-                        artistData.child(id).setValue(newArtist);
+
+                        wrap.setArtist(String.valueOf(i + 1), newArtist);
+//                        artistData.child(id).setValue(newArtist);
 
 //                        user.child(currentUser.getId()).child("topArtists").push().setValue(newArtist);
                     }
-                    user.child(currentUser.getId()).child("topArtists").setValue(currentUser.getTop10Artists());
+                    synchronized (wrap.getTopArtists()) {
+                        wrap.getTopArtists().notify();
+                    }
+//                    user.child(currentUser.getId()).child("topArtists").setValue(currentUser.getTop10Artists());
 
                 } catch (Exception e) {
                     Log.wtf("Http", e.getMessage());

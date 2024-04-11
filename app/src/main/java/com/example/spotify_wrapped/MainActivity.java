@@ -160,16 +160,13 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Error: " + response.getError(), Toast.LENGTH_SHORT).show();
             }
-        }
-        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+        } else if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 String id = intent.getStringExtra("currentUserId");
                 Log.wtf("huh", id);
                 model = new ViewModelProvider(this).get(UserViewModel.class);
-                model.getUserInformation(id);
-
+                model.getUserInformation(id, this);
             }
-
         }
     }
 
