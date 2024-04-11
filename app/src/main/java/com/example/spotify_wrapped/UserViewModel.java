@@ -48,6 +48,7 @@ public class UserViewModel extends ViewModel {
     public void getUserInformation(String id) {
         if (id == null) {
             Log.wtf("what the fuck", "shit is null");
+            return;
         }
         user.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override

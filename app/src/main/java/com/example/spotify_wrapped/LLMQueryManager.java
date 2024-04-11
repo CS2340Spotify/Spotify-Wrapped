@@ -26,7 +26,6 @@ public class LLMQueryManager {
     }
 
     public Response queryPrompt(String prompt) throws IOException {
-        System.out.println("QUERYING PROMPT");
         String body = "{" +
                 "\"model\":\"gpt-3.5-turbo\", " +
                 "\"response_format\": {\"type\": \"json_object\"}," +

@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.wtf("huh", id);
                 model = new ViewModelProvider(this).get(UserViewModel.class);
                 model.getUserInformation(id);
-
             }
 
         }
