@@ -7,6 +7,10 @@ android {
     namespace 'com.example.spotify_wrapped'
     compileSdk 34
 
+    lintOptions {
+        disable "Instantiatable"
+        disable "MissingDefaultResource"
+    }
     defaultConfig {
         applicationId "com.example.spotify_wrapped"
         minSdk 33

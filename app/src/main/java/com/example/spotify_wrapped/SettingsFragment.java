@@ -1,8 +1,6 @@
 package com.example.spotify_wrapped;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,14 +10,18 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class SettingsFragment extends Fragment {
 
-    private SettingsFragmentViewModel mViewModel;
+    private UserViewModel model;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -28,9 +30,11 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_settings, container, false);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
     View updateProfileBtn;
+
+    View settingsBackBtn;
     View darkLightBtn;
     private SharedPreferences sharedPreferences;
     private boolean isDarkModeEnabled;
@@ -39,7 +43,11 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setVisibility(View.GONE);
+
         updateProfileBtn = view.findViewById(R.id.update_profile);
+        settingsBackBtn = view.findViewById(R.id.settings_back_button);
         darkLightBtn = view.findViewById(R.id.dark_light_mode);
         sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", false);
@@ -62,6 +70,19 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        settingsBackBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                replaceFragment(new ProfileFragment());
+            }
+        });
+
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 
 //    @Override
