@@ -324,6 +324,7 @@ public class UserViewModel extends ViewModel {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
+                            currentUser = updatedUser;
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

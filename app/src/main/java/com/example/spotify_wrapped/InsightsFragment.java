@@ -90,6 +90,8 @@ public class InsightsFragment extends Fragment {
 
         LLMQueryManager manager = new LLMQueryManager();
         ArrayList<String> preferences = new ArrayList<>();
+
+        final boolean[] flag = {false};
         Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -104,7 +106,7 @@ public class InsightsFragment extends Fragment {
                         for (int i = 0; i < out.length(); i++) {
                             preferences.add(out.getString(i));
                         }
-
+                        flag[0] = true;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -112,11 +114,13 @@ public class InsightsFragment extends Fragment {
             });
 
         thread.start();
-
+        while (!flag[0]);
         List<Insight> insights = new ArrayList<>();
-        for (int i = 0; i < preferences.size(); i++) {
+        for (int i = 0; i < Math.min(preferences.size(), 5); i++) {
             String title = "Preference #" + (i + 1);
             String description = preferences.get(i);
+            Log.d("title", title);
+            Log.d("desc", description);
             insights.add(new Insight(title, description));
         }
 
