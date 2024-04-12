@@ -90,29 +90,27 @@ public class InsightsFragment extends Fragment {
 
         LLMQueryManager manager = new LLMQueryManager();
         ArrayList<String> preferences = new ArrayList<>();
-
         final boolean[] flag = {false};
         Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Log.d("Prompt", prompt.toString());
-                        Response reply = manager.queryPrompt(prompt.toString());
-                        ResponseBody replyBody = reply.body();
-                        JSONObject replyJson = new JSONObject(replyBody.string());
-                        String output = replyJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
-                        JSONObject jsonOutput = new JSONObject(output);
-                        JSONArray out = jsonOutput.getJSONArray("preferences");
-                        for (int i = 0; i < out.length(); i++) {
-                            preferences.add(out.getString(i));
-                        }
-                        flag[0] = true;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            @Override
+            public void run() {
+                try {
+                    Log.d("Prompt", prompt.toString());
+                    Response reply = manager.queryPrompt(prompt.toString());
+                    ResponseBody replyBody = reply.body();
+                    JSONObject replyJson = new JSONObject(replyBody.string());
+                    String output = replyJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+                    JSONObject jsonOutput = new JSONObject(output);
+                    JSONArray out = jsonOutput.getJSONArray("preferences");
+                    for (int i = 0; i < out.length(); i++) {
+                        preferences.add(out.getString(i));
                     }
+                    flag[0] = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-
+            }
+        });
         thread.start();
         while (!flag[0]);
         List<Insight> insights = new ArrayList<>();
