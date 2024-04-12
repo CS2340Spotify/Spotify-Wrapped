@@ -37,7 +37,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
                 String newPassword = editPassword.getText().toString().trim();
 
                 // creating user object with updated information
-                User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken");
+                User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken", "spotId");
 
 
                 mViewModel.updateUserInformation(updatedUser, UpdateAccountActivity.this);
