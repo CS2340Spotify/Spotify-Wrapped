@@ -56,8 +56,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(UpdateAccountActivity.this, SettingsFragment.class);
-                startActivity(i);
+                onBackPressed();
             }
         });
     }
