@@ -29,6 +29,14 @@ public class UpdateAccountActivity extends AppCompatActivity {
         Button saveChangesBtn = findViewById(R.id.save_changes);
 
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
