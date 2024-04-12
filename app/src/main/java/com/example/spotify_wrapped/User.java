@@ -14,6 +14,7 @@ public class User {
     private String password;
 
     private String username;
+    private String spotId;
 
     private String accessToken;
     private ArrayList<String> friends;
@@ -22,7 +23,7 @@ public class User {
     private LinkedHashMap<String, Artist> topTenArtists = new LinkedHashMap<>(20);
     private LinkedHashMap<String, Track> topTwentyTracks = new LinkedHashMap<>(30);
 
-    public User (String name, String email, String id, String image, String password, String username, String accessToken) {
+    public User (String name, String email, String id, String image, String password, String username, String accessToken, String spotId) {
         this.name = name;
         this.email = email;
         this.id = id;
@@ -30,6 +31,7 @@ public class User {
         this.password = password;
         this.username = username;
         this.accessToken = accessToken;
+        this.spotId = spotId;
     }
 
     public String getName() {
@@ -82,4 +84,12 @@ public class User {
 
     public LinkedHashMap<String, Track> getTopTwentyTracks(){return this.topTwentyTracks;}
     public LinkedHashMap<String, Artist> getTopTenArtists() { return this.topTenArtists;}
+
+    public String getSpotId() {
+        return spotId;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

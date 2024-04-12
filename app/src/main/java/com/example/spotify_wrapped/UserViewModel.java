@@ -70,8 +70,9 @@ public class UserViewModel extends ViewModel {
                         String email = (String) vals.get("email");
                         String image = (String) vals.get("image");
                         String username = (String) vals.get("username");
+                        String spotId = (String) vals.get("spotId");
                         String accessToken = token;
-                        currentUser = new User(name, email, id, image, password, username, accessToken);
+                        currentUser = new User(name, email, id, image, password, username, accessToken, spotId);
                         if (vals.get("wraps") != null) {
                             ArrayList<HashMap<String,Object>> wraps = (ArrayList<HashMap<String, Object>>) vals.get("wraps");
                             for (int i = 0; i < wraps.size(); i++) {

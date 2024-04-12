@@ -242,7 +242,7 @@ public class SpotifyAuthenticator {
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                                         String appID = mAuth.getCurrentUser().getUid();
                                                         userId = mAuth.getCurrentUser().getUid();
-                                                        User newUser = new User(name, email, appID, image, password, username, accessToken);
+                                                        User newUser = new User(name, email, appID, image, password, username, accessToken, Spotid);
                                                         idHash.child(Spotid).setValue(appID);
                                                         mDatabase.child(appID).setValue(newUser);
                                                         mDatabase.child(appID).child("image").setValue(image);
