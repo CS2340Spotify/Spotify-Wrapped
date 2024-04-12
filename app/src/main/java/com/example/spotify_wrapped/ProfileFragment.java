@@ -57,6 +57,7 @@ public class ProfileFragment extends Fragment {
 
         View settingsButton = view.findViewById(R.id.settings_button);
         View wrapButton = view.findViewById(R.id.wrap_button);
+        View pastWrapsButton = view.findViewById(R.id.past_wraps_button);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +70,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 replaceFragment(new ChooseTimeWrapFragment());
+            }
+        });
+
+        pastWrapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new PastWrapsFragment());
             }
         });
 

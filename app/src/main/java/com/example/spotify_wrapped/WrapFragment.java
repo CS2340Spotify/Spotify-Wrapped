@@ -40,6 +40,19 @@ public class WrapFragment extends Fragment {
 
     private String timeChoice;
 
+    private Wrap currentWrap;
+
+    private boolean thisIsAPastWrap;
+
+    public WrapFragment() {
+        thisIsAPastWrap = false;
+    }
+
+    public WrapFragment(Wrap clickedWrap) {
+        this.currentWrap = clickedWrap;
+        thisIsAPastWrap = true;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,29 +66,37 @@ public class WrapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setVisibility(View.GONE);
 
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
-        User currentUser = model.getCurrentUser();
+        View wrapBackButton = view.findViewById(R.id.wrap_back_button);
 
-        Wrap currentWrap;
+        if (!thisIsAPastWrap) {
+            if (timeChoice.equals("1")) {
+                currentWrap = model.makeNewWrapped(SHORT, getActivity());
+                Log.wtf("m", "huh");
+            } else if (timeChoice.equals("2")) {
+                currentWrap = model.makeNewWrapped(MEDIUM, getActivity());
+            } else {
+                currentWrap = model.makeNewWrapped(LONG, getActivity());
+            }
 
-
-
-        if (timeChoice.equals("1")) {
-            currentWrap = model.makeNewWrapped(SHORT, getActivity());
-            Log.wtf("m", "huh");
-        } else if (timeChoice.equals("2")) {
-            currentWrap = model.makeNewWrapped(MEDIUM, getActivity());
+            wrapBackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    replaceFragment(new ProfileFragment());
+                }
+            });
         } else {
-            currentWrap = model.makeNewWrapped(LONG, getActivity());
+            wrapBackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    replaceFragment(new PastWrapsFragment());
+                }
+            });
         }
-
-
 
         List<Artist> topArtistsList = null;
         List<Track> topTracksList = null;
@@ -116,14 +137,6 @@ public class WrapFragment extends Fragment {
         topGenreTextView.setSelected(true);
 
         new DownloadImageFromInternet((ImageView) getView().findViewById(R.id.top_track_album_image), getActivity()).execute(topTracksList.get(0).getAlbumImage());
-
-        View wrapBackButton = view.findViewById(R.id.wrap_back_button);
-        wrapBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replaceFragment(new ProfileFragment());
-            }
-        });
     }
 
     private void replaceFragment(Fragment fragment) {
