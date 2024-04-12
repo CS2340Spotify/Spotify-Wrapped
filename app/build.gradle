@@ -42,7 +42,7 @@ android {
     defaultConfig {
         // Get the API keys from local.properties
         Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        properties.load(project.rootProject.file("gradle.properties").newDataInputStream())
 
         // Set API keys in BuildConfig
         buildConfigField "String", "OPENAI_API_KEY", "\"${properties.getProperty("OPENAI_API_KEY")}\""
