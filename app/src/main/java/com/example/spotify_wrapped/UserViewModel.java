@@ -55,6 +55,7 @@ public class UserViewModel extends ViewModel {
     public void getUserInformation(String id, Activity context) {
         if (id == null) {
             Log.wtf("what the fuck", "shit is null");
+            return;
         }
         user.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -227,7 +228,6 @@ public class UserViewModel extends ViewModel {
 
                     }
 //                    user.child(currentUser.getId()).child("topTracks").setValue(currentUser.getTop20Tracks());
-
                 } catch (Exception e) {
                     Log.wtf("Http", e.getMessage());
                 }

@@ -91,6 +91,7 @@ public class WrapFragment extends Fragment {
             topTracksList = new ArrayList<>(currentUserTopTracks.values());
         }
 
+
         if (currentWrap.getTopGenres() != null) {
             HashMap<String, String> currentUserTopGenres = currentWrap.getTopGenres();
             topGenresList = new ArrayList<>(currentUserTopGenres.values());
