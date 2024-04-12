@@ -163,9 +163,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 String id = intent.getStringExtra("currentUserId");
+                String accessToken = intent.getStringExtra("accessToken");
                 Log.wtf("huh", id);
                 model = new ViewModelProvider(this).get(UserViewModel.class);
-                model.getUserInformation(id, this);
+                model.getUserInformation(id, accessToken, this);
             }
         }
     }

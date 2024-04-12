@@ -120,6 +120,11 @@ public class LoginActivity extends AppCompatActivity {
             if (accessToken != null) {
                 authenticator.authenticateWithSpotify(LoginActivity.this, accessToken);
             }
+        } else if (requestCode == 2) {
+            accessToken = response.getAccessToken();
+            if (accessToken != null) {
+                authenticator.confirm(this, accessToken);
+            }
         }
     }
     @Override

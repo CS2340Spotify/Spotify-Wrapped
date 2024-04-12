@@ -52,7 +52,7 @@ public class UserViewModel extends ViewModel {
     private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
 
-    public void getUserInformation(String id, Activity context) {
+    public void getUserInformation(String id, String token, Activity context) {
         if (id == null) {
             Log.wtf("what the fuck", "shit is null");
             return;
@@ -70,11 +70,8 @@ public class UserViewModel extends ViewModel {
                         String email = (String) vals.get("email");
                         String image = (String) vals.get("image");
                         String username = (String) vals.get("username");
-                        String accessToken = (String) vals.get("accessToken");
+                        String accessToken = token;
                         currentUser = new User(name, email, id, image, password, username, accessToken);
-//                        makeNewWrapped(SHORT, context);
-//                        makeNewWrapped(MEDIUM, context);
-//                        makeNewWrapped(LONG, context);
                         if (vals.get("wraps") != null) {
                             ArrayList<HashMap<String,Object>> wraps = (ArrayList<HashMap<String, Object>>) vals.get("wraps");
                             for (int i = 0; i < wraps.size(); i++) {
