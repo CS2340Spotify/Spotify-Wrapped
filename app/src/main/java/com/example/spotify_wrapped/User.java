@@ -14,13 +14,14 @@ public class User {
     private String password;
 
     private String username;
+    private String spotId;
 
     private String accessToken;
     private ArrayList<String> friends;
 
     private LinkedHashMap<String, Wrap> userWraps = new LinkedHashMap<>();
 
-    public User (String name, String email, String id, String image, String password, String username, String accessToken) {
+    public User (String name, String email, String id, String image, String password, String username, String accessToken, String spotId) {
         this.name = name;
         this.email = email;
         this.id = id;
@@ -28,6 +29,7 @@ public class User {
         this.password = password;
         this.username = username;
         this.accessToken = accessToken;
+        this.spotId = spotId;
     }
 
     public String getName() {
@@ -69,4 +71,11 @@ public class User {
         return userWraps;
     }
 
+    public String getSpotId() {
+        return spotId;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

@@ -76,7 +76,6 @@ public class WrapFragment extends Fragment {
         if (!thisIsAPastWrap) {
             if (timeChoice.equals("1")) {
                 currentWrap = model.makeNewWrapped(SHORT, getActivity());
-                Log.wtf("m", "huh");
             } else if (timeChoice.equals("2")) {
                 currentWrap = model.makeNewWrapped(MEDIUM, getActivity());
             } else {
@@ -118,19 +117,19 @@ public class WrapFragment extends Fragment {
             topGenresList = new ArrayList<>(currentUserTopGenres.values());
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Math.min(topArtistsList.size(), 5); i++) {
             Artist artist = topArtistsList.get(i);
             TextView artistTextView = (TextView) getView().findViewById(getResources().getIdentifier("artist_" + (i + 1), "id", getActivity().getPackageName()));
             artistTextView.setText((i + 1) + "    " + artist.getName());
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Math.min(topTracksList.size(), 5); i++) {
             Track track = topTracksList.get(i);
             TextView trackTextView = (TextView) getView().findViewById(getResources().getIdentifier("song_" + (i + 1), "id", getActivity().getPackageName()));
             trackTextView.setText((i + 1) + "    " + track.getTrackName());
             trackTextView.setSelected(true);
         }
-
+        Log.wtf("m", "huh");
         String topGenre = topGenresList.get(0);
         TextView topGenreTextView = (TextView) getView().findViewById(R.id.top_genre);
         topGenreTextView.setText(topGenre);
