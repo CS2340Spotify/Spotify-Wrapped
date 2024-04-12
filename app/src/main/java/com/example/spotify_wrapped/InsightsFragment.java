@@ -7,10 +7,22 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,9 +47,80 @@ public class InsightsFragment extends Fragment {
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         User currentUser = model.getCurrentUser();
 
-        TextView insightTitle = view.findViewById(R.id.insight_card_title);
-        TextView insightDescription = view.findViewById(R.id.insight_card_description);
+        Wrap wrap = model.makeNewWrapped(UserItemTimeFrame.SHORT, getActivity());
+        List<Artist> topArtistsList = null;
+        List<Track> topTracksList = null;
+        List<String> topGenresList = null;
 
+        if (wrap.getTopArtists() != null) {
+            HashMap<String, Artist> currentUserTopArtists = wrap.getTopArtists();
+            topArtistsList = new ArrayList<>(currentUserTopArtists.values());
+        }
 
+        if (wrap.getTopTracks() != null) {
+            HashMap<String, Track> currentUserTopTracks = wrap.getTopTracks();
+            topTracksList = new ArrayList<>(currentUserTopTracks.values());
+        }
+
+        if (wrap.getTopGenres() != null) {
+            HashMap<String, String> currentUserTopGenres = wrap.getTopGenres();
+            topGenresList = new ArrayList<>(currentUserTopGenres.values());
+        }
+
+        StringBuilder prompt = new StringBuilder();
+        if (topArtistsList != null) {
+            prompt.append("Here are the users top artists: ");
+            for (Artist a : topArtistsList) {
+                prompt.append(a.getName());
+                prompt.append(",");
+            }
+        }
+
+        if (topGenresList != null) {
+            prompt.append("Here are the users top genres: ");
+            for (String a : topGenresList) {
+                prompt.append(a);
+                prompt.append(", ");
+            }
+        }
+
+        if (topTracksList != null) {
+            prompt.append("Here are the users top tracks: ");
+            for (Track a : topTracksList) {
+                prompt.append(a.getTrackName());
+                prompt.append(", ");
+            }
+        }
+
+        LLMQueryManager manager = new LLMQueryManager();
+        ArrayList<String> preferences = new ArrayList<>();
+        Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Log.d("Prompt", prompt.toString());
+                        Response reply = manager.queryPrompt(prompt.toString());
+                        ResponseBody replyBody = reply.body();
+                        JSONObject replyJson = new JSONObject(replyBody.string());
+                        String output = replyJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+                        JSONObject jsonOutput = new JSONObject(output);
+                        JSONArray out = jsonOutput.getJSONArray("preferences");
+                        for (int i = 0; i < out.length(); i++) {
+                            preferences.add(out.getString(i));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        thread.start();
+
+        for (int i = 0; i < preferences.size(); i++) {
+            String title = "Preference #" + (i + 1);
+            String description = preferences.get(i);
+            // add title and description to insights
+        }
     }
 }

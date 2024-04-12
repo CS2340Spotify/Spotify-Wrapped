@@ -97,13 +97,13 @@ public class WrapFragment extends Fragment {
             topGenresList = new ArrayList<>(currentUserTopGenres.values());
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Math.min(topArtistsList.size(), 5); i++) {
             Artist artist = topArtistsList.get(i);
             TextView artistTextView = (TextView) getView().findViewById(getResources().getIdentifier("artist_" + (i + 1), "id", getActivity().getPackageName()));
             artistTextView.setText((i + 1) + "    " + artist.getName());
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Math.min(topTracksList.size(), 5); i++) {
             Track track = topTracksList.get(i);
             TextView trackTextView = (TextView) getView().findViewById(getResources().getIdentifier("song_" + (i + 1), "id", getActivity().getPackageName()));
             trackTextView.setText((i + 1) + "    " + track.getTrackName());

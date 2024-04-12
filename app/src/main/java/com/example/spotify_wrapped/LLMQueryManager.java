@@ -34,6 +34,7 @@ public class LLMQueryManager {
                 "You will be given information about the user and should describe things like how they would act, think, and dress. " +
                 "Return this information in a single array in JSON format named preferences, containing at least ten pieces of information.\"}," +
                 "{\"role\": \"user\", \"content\":\"" + prompt + "\"}]}";
+        Log.d("Prompt", body);
         RequestBody reqBody = RequestBody.create(body, MediaType.parse("application/json; charset=utf-8"));
 
         Request request = new Request.Builder()
