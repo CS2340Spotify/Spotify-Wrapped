@@ -1,34 +1,30 @@
 package com.example.spotify_wrapped;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InsightsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+///**
+// * A simple {@link Fragment} subclass.
+// * Use the {@link InsightsFragment#newInstance} factory method to
+// * create an instance of this fragment.
+// */
 public class InsightsFragment extends Fragment {
 
     UserViewModel model;
@@ -117,10 +113,15 @@ public class InsightsFragment extends Fragment {
 
         thread.start();
 
+        List<Insight> insights = new ArrayList<>();
         for (int i = 0; i < preferences.size(); i++) {
             String title = "Preference #" + (i + 1);
             String description = preferences.get(i);
-            // add title and description to insights
+            insights.add(new Insight(title, description));
         }
+
+        RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
+        InsightsAdapter adapter = new InsightsAdapter(insights);
+        recyclerView.setAdapter(adapter);
     }
 }
