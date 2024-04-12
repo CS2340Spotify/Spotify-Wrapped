@@ -1,6 +1,7 @@
 package com.example.spotify_wrapped;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,45 +19,41 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import static com.example.spotify_wrapped.UserItemTimeFrame.LONG;
+import static com.example.spotify_wrapped.UserItemTimeFrame.MEDIUM;
+import static com.example.spotify_wrapped.UserItemTimeFrame.SHORT;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WrapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WrapFragment extends Fragment {
 
     private UserViewModel model;
 
-    public WrapFragment() {
-        // Required empty public constructor
-    }
+    private String timeChoice;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            timeChoice = bundle.getString("timeChoice");
+        }
         return inflater.inflate(R.layout.fragment_wrap, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setVisibility(View.GONE);
@@ -64,17 +62,38 @@ public class WrapFragment extends Fragment {
 
         User currentUser = model.getCurrentUser();
 
+        Wrap currentWrap;
+
+
+
+        if (timeChoice.equals("1")) {
+            currentWrap = model.makeNewWrapped(SHORT, getActivity());
+            Log.wtf("m", "huh");
+        } else if (timeChoice.equals("2")) {
+            currentWrap = model.makeNewWrapped(MEDIUM, getActivity());
+        } else {
+            currentWrap = model.makeNewWrapped(LONG, getActivity());
+        }
+
+
+
         List<Artist> topArtistsList = null;
         List<Track> topTracksList = null;
+        List<String> topGenresList = null;
 
-        if (currentUser.getTop10Artists() != null) {
-            LinkedHashMap<String, Artist> currentUserTopArtists = model.getCurrentUser().getTop10Artists();
+        if (currentWrap.getTopArtists() != null) {
+            HashMap<String, Artist> currentUserTopArtists = currentWrap.getTopArtists();
             topArtistsList = new ArrayList<>(currentUserTopArtists.values());
         }
 
-        if (currentUser.getTop20Tracks() != null) {
-            LinkedHashMap<String, Track> currentUserTopTracks = model.getCurrentUser().getTop20Tracks();
+        if (currentWrap.getTopTracks() != null) {
+            HashMap<String, Track> currentUserTopTracks = currentWrap.getTopTracks();
             topTracksList = new ArrayList<>(currentUserTopTracks.values());
+        }
+
+        if (currentWrap.getTopGenres() != null) {
+            HashMap<String, String> currentUserTopGenres = currentWrap.getTopGenres();
+            topGenresList = new ArrayList<>(currentUserTopGenres.values());
         }
 
         for (int i = 0; i < 5; i++) {
@@ -89,6 +108,11 @@ public class WrapFragment extends Fragment {
             trackTextView.setText((i + 1) + "    " + track.getTrackName());
             trackTextView.setSelected(true);
         }
+
+        String topGenre = topGenresList.get(0);
+        TextView topGenreTextView = (TextView) getView().findViewById(R.id.top_genre);
+        topGenreTextView.setText(topGenre);
+        topGenreTextView.setSelected(true);
 
         new DownloadImageFromInternet((ImageView) getView().findViewById(R.id.top_track_album_image), getActivity()).execute(topTracksList.get(0).getAlbumImage());
 

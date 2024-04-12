@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
         wrapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new WrapFragment());
+                replaceFragment(new ChooseTimeWrapFragment());
             }
         });
 
