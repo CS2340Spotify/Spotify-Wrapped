@@ -19,6 +19,8 @@ public class User {
     private ArrayList<String> friends;
 
     private LinkedHashMap<String, Wrap> userWraps = new LinkedHashMap<>();
+    private LinkedHashMap<String, Artist> topTenArtists = new LinkedHashMap<>(20);
+    private LinkedHashMap<String, Track> topTwentyTracks = new LinkedHashMap<>(30);
 
     public User (String name, String email, String id, String image, String password, String username, String accessToken) {
         this.name = name;
@@ -68,4 +70,16 @@ public class User {
     public LinkedHashMap<String, Wrap> getUserWraps() {
         return userWraps;
     }
+    public void setArtist(String key, Artist artist) {
+        topTenArtists.put(key, artist);
+    }
+    public Artist getArtist(String key) {
+        return topTenArtists.get(key);
+    }
+    public void setTrack(String key, Track track) {
+        topTwentyTracks.put(key, track);
+    }
+
+    public LinkedHashMap<String, Track> getTopTwentyTracks(){return this.topTwentyTracks;}
+    public LinkedHashMap<String, Artist> getTopTenArtists() { return this.topTenArtists;}
 }

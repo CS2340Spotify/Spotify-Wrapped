@@ -67,13 +67,13 @@ public class WrapFragment extends Fragment {
         List<Artist> topArtistsList = null;
         List<Track> topTracksList = null;
 
-        if (currentUser.getTop10Artists() != null) {
-            LinkedHashMap<String, Artist> currentUserTopArtists = model.getCurrentUser().getTop10Artists();
+        if (currentUser.getTopTenArtists() != null) {
+            LinkedHashMap<String, Artist> currentUserTopArtists = model.getCurrentUser().getTopTenArtists();
             topArtistsList = new ArrayList<>(currentUserTopArtists.values());
         }
 
-        if (currentUser.getTop20Tracks() != null) {
-            LinkedHashMap<String, Track> currentUserTopTracks = model.getCurrentUser().getTop20Tracks();
+        if (currentUser.getTopTwentyTracks() != null) {
+            LinkedHashMap<String, Track> currentUserTopTracks = model.getCurrentUser().getTopTwentyTracks();
             topTracksList = new ArrayList<>(currentUserTopTracks.values());
         }
 
