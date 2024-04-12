@@ -226,7 +226,7 @@
                 android:fontFamily="@font/circular_std_medium_500"
                 android:text="Genre"
                 android:textColor="@color/white"
-                android:textSize="25sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 style="@style/autoscroll"/>
         </TableRow>
