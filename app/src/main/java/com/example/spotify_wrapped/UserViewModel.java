@@ -50,9 +50,10 @@ public class UserViewModel extends ViewModel {
 
     private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
-    private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
+    private final DatabaseReference followingData = FirebaseDatabase.getInstance().getReference("Following");
+    DatabaseReference playlistsRef = FirebaseDatabase.getInstance().getReference("playlists");
+
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
-    private final DatabaseReference followingData = FirebaseDatabase.getInstance().getReference("following");
 
     public void getUserInformation(String id, String token, Activity context) {
         if (id == null) {
@@ -234,6 +235,7 @@ public class UserViewModel extends ViewModel {
             }
         });
     }
+
     private void getFollowingFromSpotify() {
         Request request = new Request.Builder()
                 .url("https://api.spotify.com/v1/me/following?type=artist")
@@ -265,19 +267,56 @@ public class UserViewModel extends ViewModel {
                             imageUrl = (String) imageOb.get("url");
                         }
                         Artist newArtist = new Artist(name, imageUrl, id);
-                        JSONArray genres = (JSONArray) artist.get("genres");
-                        for (int j = 0; j < genres.length(); j++) {
-                            newArtist.setGenres(String.valueOf(j + 1), (String) genres.get(j));
-                        }
                         currentUser.setArtist(String.valueOf(i + 1), newArtist);
-                        artistData.child(id).setValue(newArtist);
-
+                        followingData.child(newArtist.getId()).setValue(newArtist);
                     }
-//                    user.child(currentUser.getId()).child("topArtists").setValue(currentUser.getTop10Artists());
                 } catch (JSONException e) {
-                   Log.wtf("Http", e.getMessage());
+                    Log.wtf("Http", e.getMessage());
                 }
-            });
+            }
+        });
+    }
+
+    private void getPlaylistsFromSpotify() {
+        Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/users/smedjan/playlists")
+                .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d("HTTP", "Failed to fetch data: " + e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray playlists = (JSONArray) jsonObject.get("items");
+                    for (int i = 0; i < playlists.length(); i++) {
+                        JSONObject playlist = (JSONObject) playlists.get(i);
+                        String id = (String) playlist.get("id");
+                        String name = (String) playlist.get("name");
+
+                        String imageUrl;
+                        JSONArray images = (JSONArray) playlist.get("images");
+                        if (images.isNull(0)) {
+                            imageUrl = null;
+                        } else {
+                            JSONObject imageOb = (JSONObject) images.get(1);
+                            imageUrl = (String) imageOb.get("url");
+                        }
+                        ArrayList<String> songs = new ArrayList<>();
+                        Playlist newPlaylist = new Playlist(name, imageUrl, id, songs);
+                        currentUser.setPlaylist(String.valueOf(i + 1), newPlaylist);
+                        playlistsRef.child(newPlaylist.getId()).setValue(newPlaylist);
+                    }
+                } catch (JSONException e) {
+                    Log.wtf("Http", e.getMessage());
+                }
+            }
+        });
     }
 
     private void getArtistsFromSpotify(UserItemTimeFrame time, Wrap wrap, Activity context) {

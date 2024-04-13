@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 public class User {
     private String name;
@@ -65,6 +66,18 @@ public class User {
 
     public void setWrap(String key, Wrap wrap) {
         userWraps.put(key, wrap);
+    }
+
+    private HashMap<String, Artist> artists = new HashMap<>();
+
+    public void setArtist(String position, Artist artist) {
+        this.artists.put(position, artist);
+    }
+
+    private HashMap<String, Playlist> playlists = new HashMap<>();
+
+    public void setPlaylist(String key, Playlist playlist) {
+        this.playlists.put(key, playlist);
     }
 
     public LinkedHashMap<String, Wrap> getUserWraps() {
