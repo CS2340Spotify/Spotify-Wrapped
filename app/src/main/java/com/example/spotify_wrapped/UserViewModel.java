@@ -394,9 +394,9 @@ public class UserViewModel extends ViewModel {
         String userId = updatedUser.getId();
 
         HashMap<String, Object> updates = new HashMap<>();
-        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
-            updates.put("name", updatedUser.getName());
-        }
+//        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+//            updates.put("name", updatedUser.getName());
+//        }
         if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
             updates.put("username", updatedUser.getUsername());
         }

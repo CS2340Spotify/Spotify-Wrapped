@@ -40,18 +40,16 @@ public class UpdateAccountActivity extends AppCompatActivity {
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newName = editName.getText().toString().trim();
+                //String newName = editName.getText().toString().trim();
                 String newUsername = editUsername.getText().toString().trim();
                 String newPassword = editPassword.getText().toString().trim();
 
                 // creating user object with updated information
-                User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken", "spotId");
-
+                User updatedUser = new User("name", "email", "id", "image", newPassword, newUsername, "accessToken", "spotId");
 
                 mViewModel.updateUserInformation(updatedUser, UpdateAccountActivity.this);
             }
         });
-
 
         backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
