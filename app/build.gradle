@@ -4,9 +4,14 @@ plugins {
 }
 
 android {
+    android.buildFeatures.buildConfig true
     namespace 'com.example.spotify_wrapped'
     compileSdk 34
 
+    lintOptions {
+        disable "Instantiatable"
+        disable "MissingDefaultResource"
+    }
     defaultConfig {
         applicationId "com.example.spotify_wrapped"
         minSdk 33
@@ -28,10 +33,22 @@ android {
             debuggable true
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    defaultConfig {
+        // Get the API keys from local.properties
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("gradle.properties").newDataInputStream())
+
+        // Set API keys in BuildConfig
+        //buildConfigField "String", "OPENAI_API_KEY", "\"${properties.getProperty("OPENAI_API_KEY")}\""
+        buildConfigField "String", "OPENAI_API_KEY", "\"API_KEY\""
+    }
+
     buildFeatures {
         viewBinding = true
         dataBinding = true

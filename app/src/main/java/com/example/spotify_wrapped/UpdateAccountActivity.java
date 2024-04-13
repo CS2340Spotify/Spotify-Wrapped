@@ -29,6 +29,14 @@ public class UpdateAccountActivity extends AppCompatActivity {
         Button saveChangesBtn = findViewById(R.id.save_changes);
 
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,7 +45,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
                 String newPassword = editPassword.getText().toString().trim();
 
                 // creating user object with updated information
-                User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken");
+                User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken", "spotId");
 
 
                 mViewModel.updateUserInformation(updatedUser, UpdateAccountActivity.this);
@@ -48,8 +56,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(UpdateAccountActivity.this, SettingsFragment.class);
-                startActivity(i);
+                onBackPressed();
             }
         });
     }

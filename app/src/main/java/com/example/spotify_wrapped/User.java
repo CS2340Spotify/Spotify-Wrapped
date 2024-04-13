@@ -14,13 +14,14 @@ public class User {
     private String password;
 
     private String username;
+    private String spotId;
 
     private String accessToken;
     private ArrayList<String> friends;
-    private LinkedHashMap<String, Artist> top10Artists = new LinkedHashMap<>(20);
-    private LinkedHashMap<String, Track> top20Tracks = new LinkedHashMap<>(30);
 
-    public User (String name, String email, String id, String image, String password, String username, String accessToken) {
+    private LinkedHashMap<String, Wrap> userWraps = new LinkedHashMap<>();
+
+    public User (String name, String email, String id, String image, String password, String username, String accessToken, String spotId) {
         this.name = name;
         this.email = email;
         this.id = id;
@@ -28,6 +29,7 @@ public class User {
         this.password = password;
         this.username = username;
         this.accessToken = accessToken;
+        this.spotId = spotId;
     }
 
     public String getName() {
@@ -53,6 +55,7 @@ public class User {
     public String getAccessToken() {
         return accessToken;
     }
+    public void setAccessToken(String accessToken){this.accessToken = accessToken;}
     public void addFriend(String FriendId) {
         this.friends.add(id);
     }
@@ -60,16 +63,19 @@ public class User {
         return this.friends.get(index);
     }
 
-    public void setArtist(String key, Artist artist) {
-        top10Artists.put(key, artist);
+    public void setWrap(String key, Wrap wrap) {
+        userWraps.put(key, wrap);
     }
-    public Artist getArtist(String key) {
-        return top10Artists.get(key);
-    }
-    public void setTrack(String key, Track track) {
-        top20Tracks.put(key, track);
-    }
-    public LinkedHashMap<String, Track> getTop20Tracks(){return this.top20Tracks;}
-    public LinkedHashMap<String, Artist> getTop10Artists() { return this.top10Artists;}
 
+    public LinkedHashMap<String, Wrap> getUserWraps() {
+        return userWraps;
+    }
+
+    public String getSpotId() {
+        return spotId;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

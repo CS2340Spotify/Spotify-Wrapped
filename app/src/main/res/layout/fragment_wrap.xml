@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/teal_background">
+    android:background="@drawable/login_background">
 
     <ImageButton
         android:id="@+id/wrap_back_button"
@@ -18,185 +18,220 @@
         android:scaleType="fitCenter"
         android:src="@drawable/black_back_button" />
 
+    <ImageView
+        android:id="@+id/top_track_album_image"
+        android:layout_width="227dp"
+        android:layout_height="227dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="99dp"
+        android:layout_marginEnd="92dp"
+        android:scaleType="fitCenter" />
+
     <TableLayout
         android:id="@+id/wrap_table_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="380dp"
-        android:stretchColumns="*"
-        tools:ignore="ExtraText">
+        android:layout_below="@+id/top_track_album_image"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:stretchColumns="*">
         <!-- Header Row -->
         <TableRow>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Top Artists"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold"
+                android:layout_marginLeft="30dp"
                 android:layout_marginBottom="7dp"
-                android:layout_marginLeft="16dp"
-                android:fontFamily="@font/circular_std_medium_500" />
+                android:fontFamily="@font/circular_std_medium_500"
+                android:text="Top Artists"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
                 android:fontFamily="@font/circular_std_medium_500"
                 android:text="Top Songs"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="20sp" />
         </TableRow>
 
         <!-- Rows for artists and songs -->
-        <TableRow>
+        <TableRow
+
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+
             <TextView
                 android:id="@+id/artist_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Artist 1"
+                android:layout_marginLeft="30dp"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:layout_marginLeft="16dp"
+                android:text="Artist 1"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/spotify_grey" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
 
             <TextView
                 android:id="@+id/song_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Song 1"
+                android:layout_marginRight="16dp"
                 android:fontFamily="@font/circular_std_medium_500"
+                android:text="Song 1"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginBottom="10dp">
+
             <TextView
                 android:id="@+id/artist_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Artist 2"
+                android:layout_marginLeft="30dp"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:layout_marginLeft="16dp"
+                android:text="Artist 2"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
 
             <TextView
                 android:id="@+id/song_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Song 2"
+                android:layout_marginRight="16dp"
                 android:fontFamily="@font/circular_std_medium_500"
+                android:text="Song 2"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginBottom="10dp">
+
             <TextView
                 android:id="@+id/artist_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Artist 3"
+                android:layout_marginLeft="30dp"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:layout_marginLeft="16dp"
+                android:text="Artist 3"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
 
             <TextView
                 android:id="@+id/song_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Song 3"
+                android:layout_marginRight="16dp"
+
                 android:fontFamily="@font/circular_std_medium_500"
+                android:text="Song 3"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginBottom="10dp">
+
             <TextView
                 android:id="@+id/artist_4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Artist 4"
+                android:layout_marginLeft="30dp"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:layout_marginLeft="16dp"
+                android:text="Artist 4"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
 
             <TextView
                 android:id="@+id/song_4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Song 4"
+                android:layout_marginRight="16dp"
+
                 android:fontFamily="@font/circular_std_medium_500"
+                android:text="Song 4"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginBottom="10dp">
+
             <TextView
                 android:id="@+id/artist_5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Artist 5"
+                android:layout_marginLeft="30dp"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:layout_marginLeft="16dp"
+                android:text="Artist 5"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
 
             <TextView
                 android:id="@+id/song_5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:fontFamily="@font/circular_std_medium_500"
                 android:text="Song 5"
-                android:fontFamily="@font/circular_std_medium_500"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
         </TableRow>
-
         <TableRow>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Minutes"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="16dp"
-                android:fontFamily="@font/circular_std_medium_500" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:fontFamily="@font/circular_std_medium_500"
                 android:text="Top Genre"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="7dp"
-                android:fontFamily="@font/circular_std_medium_500" />
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
         </TableRow>
-
-        <TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
             <TextView
+                android:id="@+id/top_genre"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Minutes"
+                android:layout_marginLeft="30dp"
                 android:fontFamily="@font/circular_std_medium_500"
-                android:layout_marginLeft="16dp"
-                android:textSize="20sp"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:text="Genre"
-                android:fontFamily="@font/circular_std_medium_500"
-                android:textSize="20sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                style="@style/autoscroll"/>
         </TableRow>
     </TableLayout>
+
+
 
 </RelativeLayout>
