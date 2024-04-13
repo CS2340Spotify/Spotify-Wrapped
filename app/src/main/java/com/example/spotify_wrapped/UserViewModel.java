@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class UserViewModel extends ViewModel {
 
     private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
+    private final DatabaseReference followingData = FirebaseDatabase.getInstance().getReference("following");
 
     public void getUserInformation(String id) {
         if (id == null) {
@@ -158,6 +160,51 @@ public class UserViewModel extends ViewModel {
                 }
             }
         });
+    }
+    private void getFollowingFromSpotify() {
+        Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me/following?type=artist")
+                .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d("HTTP", "Failed to fetch data: " + e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray artists = (JSONArray) jsonObject.get("items");
+                    for (int i = 0; i < artists.length(); i++) {
+                        JSONObject artist = (JSONObject) artists.get(i);
+                        String id = (String) artist.get("id");
+                        String name = (String) artist.get("name");
+
+                        String imageUrl;
+                        JSONArray images = (JSONArray) artist.get("images");
+                        if (images.isNull(0)) {
+                            imageUrl = null;
+                        } else {
+                            JSONObject imageOb = (JSONObject) images.get(1);
+                            imageUrl = (String) imageOb.get("url");
+                        }
+                        Artist newArtist = new Artist(name, imageUrl, id);
+                        JSONArray genres = (JSONArray) artist.get("genres");
+                        for (int j = 0; j < genres.length(); j++) {
+                            newArtist.setGenres(String.valueOf(j + 1), (String) genres.get(j));
+                        }
+                        currentUser.setArtist(String.valueOf(i + 1), newArtist);
+                        artistData.child(id).setValue(newArtist);
+
+                    }
+//                    user.child(currentUser.getId()).child("topArtists").setValue(currentUser.getTop10Artists());
+                } catch (JSONException e) {
+                   Log.wtf("Http", e.getMessage());
+                }
+            });
     }
 
     private void getArtistsFromSpotify() {

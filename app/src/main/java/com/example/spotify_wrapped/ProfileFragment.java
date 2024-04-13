@@ -81,5 +81,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        if(model.getCurrentUser().get)
+
     }
 }
