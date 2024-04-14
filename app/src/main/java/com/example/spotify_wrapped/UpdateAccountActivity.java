@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class UpdateAccountActivity extends AppCompatActivity {
-    private UserViewModel mViewModel;
+    private UserViewModel model;
     private EditText editName, editUsername, editPassword;
 
     @Override
@@ -28,7 +28,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         editPassword = findViewById(R.id.update_password);
         Button saveChangesBtn = findViewById(R.id.save_changes);
 
-        mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        model = new ViewModelProvider(this).get(UserViewModel.class);
 
         backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,12 +43,30 @@ public class UpdateAccountActivity extends AppCompatActivity {
                 //String newName = editName.getText().toString().trim();
                 String newUsername = editUsername.getText().toString().trim();
                 String newPassword = editPassword.getText().toString().trim();
+                //User updatedUser = model.getCurrentUser();
 
                 // creating user object with updated information
                 User updatedUser = new User("name", "email", "id", "image", newPassword, newUsername, "accessToken", "spotId");
+//                User updatedUser = new User(
+//                        currentUser.getName(),
+//                        currentUser.getEmail(),
+//                        currentUser.getId(),
+//                        currentUser.getImage(),
+//                        newPassword,
+//                        newUsername,
+//                        currentUser.getAccessToken(),
+//                        currentUser.getSpotId()
+//                );
+                if (!newUsername.isEmpty() || !newPassword.isEmpty()) {
+                    // Assuming you have access to newEmail, image, accessToken, and Spotid variables here
 
-                mViewModel.updateUserInformation(updatedUser, UpdateAccountActivity.this);
-            }
+                    // Call the updateUserInformation method with the provided parameters
+                    model.updateUserInformation(UpdateAccountActivity.this, newUsername, newPassword, updatedUser.getAccessToken(), updatedUser.getSpotId());
+                } else {
+                    // Display a toast if both new username and new password are empty
+                    Toast.makeText(UpdateAccountActivity.this, "Please enter new username or password", Toast.LENGTH_SHORT).show();
+                }
+                //model.updateUserInformation(updatedUser, UpdateAccountActivity.this);
         });
 
         backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
