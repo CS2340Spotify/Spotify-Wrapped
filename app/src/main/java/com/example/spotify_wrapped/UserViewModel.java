@@ -392,8 +392,8 @@ public class UserViewModel extends ViewModel {
         });
 
     }
-    public void updateUserInformation(Context context, String newUsername, String newEmail, String accessToken, String Spotid) {
-        String userId = user.getId();
+    public void updateUserInformation(User updatedUser, Context context) {
+        String userId = user.getID();
 
         HashMap<String, Object> updates = new HashMap<>();
         if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
