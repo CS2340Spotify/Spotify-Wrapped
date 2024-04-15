@@ -13,14 +13,12 @@ public class User {
     private String id;
     private String image;
     private String password;
-
     private String username;
     private String spotId;
-
     private String accessToken;
     private ArrayList<String> friends;
-
     private LinkedHashMap<String, Wrap> userWraps = new LinkedHashMap<>();
+    private static User currentUser;
 
     public User (String name, String email, String id, String image, String password, String username, String accessToken, String spotId) {
         this.name = name;
@@ -32,6 +30,7 @@ public class User {
         this.accessToken = accessToken;
         this.spotId = spotId;
     }
+
 
     public String getName() {
         return name;
@@ -90,5 +89,19 @@ public class User {
 
     public String getImage() {
         return image;
+    }
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    public void setUsername(String newUsername) {
+        this.username = username;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.spotify_wrapped;
 
+import static com.example.spotify_wrapped.User.setCurrentUser;
 import static com.example.spotify_wrapped.UserItemTimeFrame.LONG;
 import static com.example.spotify_wrapped.UserItemTimeFrame.MEDIUM;
 import static com.example.spotify_wrapped.UserItemTimeFrame.SHORT;
@@ -9,6 +10,7 @@ import  com.example.spotify_wrapped.UserItemTimeFrame;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -394,9 +396,9 @@ public class UserViewModel extends ViewModel {
         String userId = updatedUser.getId();
 
         HashMap<String, Object> updates = new HashMap<>();
-        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
-            updates.put("name", updatedUser.getName());
-        }
+//        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+//            updates.put("name", updatedUser.getName());
+//        }
         if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
             updates.put("username", updatedUser.getUsername());
         }
@@ -410,7 +412,8 @@ public class UserViewModel extends ViewModel {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
-                            currentUser = updatedUser;
+                            //String pass = currentUser.getPassword();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -423,6 +426,8 @@ public class UserViewModel extends ViewModel {
             Toast.makeText(context, "No changes made", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     public User getCurrentUser() {return currentUser;}
 
