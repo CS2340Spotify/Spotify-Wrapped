@@ -5,10 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/spotify_grey"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -62,18 +65,19 @@
                 android:src="@drawable/ic_settings" />
 
         </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.cardview.widget.CardView
+
+    <androidx.cardview.widget.CardView
             android:id="@+id/user_info_card"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="15dp"
             app:cardElevation="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/icon_background"
             android:layout_marginTop="100dp"
-            android:layout_margin="16dp">
+         android:background="@color/spotify_green"
+
+        android:layout_margin="16dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -127,9 +131,9 @@
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@id/profile_image"
                     app:layout_constraintTop_toBottomOf="@id/profile_email" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         </androidx.cardview.widget.CardView>
 
@@ -181,37 +185,20 @@
             app:layout_constraintTop_toBottomOf="@id/playlists_label"
             tools:listitem="@layout/item_playlist" />
 
-        <Button
-            android:id="@+id/wrap_button"
-            android:layout_width="200dp"
+        <GridView
+            android:id="@+id/past_wraps_grid"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/spotify_green"
-            android:fontFamily="@font/circular_std_medium_500"
-            android:text="Wrap"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playlists_recycler_view" />
+            app:layout_constraintTop_toBottomOf="@+id/playlists_recycler_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:numColumns="3"
+            >
 
-        <Button
-            android:id="@+id/past_wraps_button"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/spotify_green"
-            android:fontFamily="@font/circular_std_medium_500"
-            android:text="View Past Wrappeds"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wrap_button" />
+        </GridView>
 
 
+    </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+

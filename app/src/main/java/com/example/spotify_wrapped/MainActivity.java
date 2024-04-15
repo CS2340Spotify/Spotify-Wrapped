@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new InsightsFragment());
             } else if (itemId == R.id.navigation_profile) {
                 replaceFragment(new ProfileFragment());
+            } else if (itemId == R.id.add_wrap) {
+                replaceFragment(new ChooseTimeWrapFragment());
             }
 
             return true;

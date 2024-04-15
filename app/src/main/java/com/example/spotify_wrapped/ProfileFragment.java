@@ -33,6 +33,7 @@ public class ProfileFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private PastWrapsAdapter pastWrapsAdapter;
 
     private UserViewModel model;
 
@@ -44,6 +45,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
+        model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
         RecyclerView playlistsRecyclerView = view.findViewById(R.id.playlists_recycler_view);
         List<Playlist> playlistsList = new ArrayList<>();
@@ -57,20 +59,23 @@ public class ProfileFragment extends Fragment {
         FollowingAdapter followingAdapter = new FollowingAdapter(getContext(), followingList);
         followingRecyclerView.setAdapter(followingAdapter);
 
+        GridView pastWraps = view.findViewById(R.id.past_wraps_grid);
+        pastWrapsAdapter = new PastWrapsAdapter(getActivity(), model.getCurrentUser().getUserWraps());
+        pastWraps.setAdapter(pastWrapsAdapter);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setVisibility(View.VISIBLE);
 
         View settingsButton = view.findViewById(R.id.settings_button);
-        View wrapButton = view.findViewById(R.id.wrap_button);
-        View pastWrapsButton = view.findViewById(R.id.past_wraps_button);
+//        View wrapButton = view.findViewById(R.id.wrap_button);
+//        View pastWrapsButton = view.findViewById(R.id.past_wraps_button);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,19 +84,19 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        wrapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replaceFragment(new ChooseTimeWrapFragment());
-            }
-        });
+//        wrapButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                replaceFragment(new ChooseTimeWrapFragment());
+//            }
+//        });
 
-        pastWrapsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replaceFragment(new PastWrapsFragment());
-            }
-        });
+//        pastWrapsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                replaceFragment(new PastWrapsFragment());
+//            }
+//        });
 
     }
 

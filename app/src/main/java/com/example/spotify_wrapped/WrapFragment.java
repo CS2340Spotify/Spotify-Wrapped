@@ -89,12 +89,12 @@ public class WrapFragment extends Fragment {
                 }
             });
         } else {
-            wrapBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    replaceFragment(new PastWrapsFragment());
-                }
-            });
+//            wrapBackButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    replaceFragment(new PastWrapsFragment());
+//                }
+//            });
         }
 
         List<Artist> topArtistsList = null;
