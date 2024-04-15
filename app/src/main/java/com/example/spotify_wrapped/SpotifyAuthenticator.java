@@ -124,6 +124,7 @@ public class SpotifyAuthenticator {
         });
     }
     public void loginEmailPassword(Activity context, String email, String password) {
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -133,6 +134,10 @@ public class SpotifyAuthenticator {
                             userId = user.getUid();
                             confirmLogin(context);
                         } else {
+//                            Exception exception = task.getException();
+//                            if (exception != null) {
+//                                Log.wtf("invalid credentials", exception.getMessage());
+//                            }
                             Toast.makeText(context, "Invalid Credentials",
                                     Toast.LENGTH_SHORT).show();
                         }

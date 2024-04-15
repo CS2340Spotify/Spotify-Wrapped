@@ -393,12 +393,12 @@ public class UserViewModel extends ViewModel {
 
     }
     public void updateUserInformation(User updatedUser, Context context) {
-        String userId = user.getID();
+        String userId = updatedUser.getId();
 
         HashMap<String, Object> updates = new HashMap<>();
-        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
-            updates.put("name", updatedUser.getName());
-        }
+//        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+//            updates.put("name", updatedUser.getName());
+//        }
         if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
             updates.put("username", updatedUser.getUsername());
         }
@@ -412,7 +412,8 @@ public class UserViewModel extends ViewModel {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
-                            currentUser = updatedUser;
+                            //String pass = currentUser.getPassword();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -425,6 +426,8 @@ public class UserViewModel extends ViewModel {
             Toast.makeText(context, "No changes made", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     public User getCurrentUser() {return currentUser;}
 
