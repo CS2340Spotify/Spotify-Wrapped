@@ -72,6 +72,7 @@ dependencies {
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation 'androidx.navigation:navigation-fragment:2.7.6'
     implementation 'androidx.navigation:navigation-ui:2.7.6'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 
     testImplementation 'junit:junit:4.13.2'

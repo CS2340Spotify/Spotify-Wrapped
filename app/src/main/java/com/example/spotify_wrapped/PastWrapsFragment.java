@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.spotify_wrapped.databinding.FragmentPastWrapsBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,8 @@ public class PastWrapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setVisibility(View.GONE);
 
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         GridView gridView = binding.gridView;

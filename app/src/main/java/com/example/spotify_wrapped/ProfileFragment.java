@@ -1,6 +1,5 @@
 package com.example.spotify_wrapped;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,21 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +50,20 @@ public class ProfileFragment extends Fragment {
         View settingsButton = view.findViewById(R.id.settings_button);
         View wrapButton = view.findViewById(R.id.wrap_button);
         View pastWrapsButton = view.findViewById(R.id.past_wraps_button);
+        ImageView profileImage = view.findViewById(R.id.profile_image);
+        TextView profileUsername = view.findViewById(R.id.profile_username);
+        TextView profileEmail = view.findViewById(R.id.profile_email);
+
+        User currentUser = model.getCurrentUser();
+
+        String currentUserUsername = currentUser.getUsername();
+        String currentUserEmail = currentUser.getEmail();
+        String currentUserImage = currentUser.getImage();
+
+        profileUsername.setText(currentUserUsername);
+        profileEmail.setText(currentUserEmail);
+
+        WrapFragment.DownloadImageFromInternet downloadImageFromInternet = (WrapFragment.DownloadImageFromInternet) new WrapFragment.DownloadImageFromInternet(profileImage, getActivity()).execute(currentUserImage);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
