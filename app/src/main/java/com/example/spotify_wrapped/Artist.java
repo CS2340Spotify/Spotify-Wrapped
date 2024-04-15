@@ -30,9 +30,6 @@ public class Artist {
         return image;
     }
 
-//    public String[] getGenres() {
-//        return genres;
-//    }
     public String getId() {
         return id;
     }

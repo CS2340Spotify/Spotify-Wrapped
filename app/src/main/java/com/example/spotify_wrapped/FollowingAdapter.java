@@ -4,29 +4,34 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.ViewHolder> {
-    private List<String> mData;
+    private List<Following> mData;
     private LayoutInflater mInflater;
 
-    public FollowingAdapter(Context context, List<String> data) {
+    public FollowingAdapter(Context context, List<Following> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_following, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = mData.get(position);
-        holder.myTextView.setText(name);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Following following = mData.get(position);
+        holder.artistName.setText(following.getArtistName());
+        Picasso.get().load(following.getArtistImageUrl()).into(holder.artistImage);
     }
 
     @Override
@@ -35,11 +40,13 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView myTextView;
+        ImageView artistImage;
+        TextView artistName;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.artist_name);
+            artistImage = itemView.findViewById(R.id.artist_image);
+            artistName = itemView.findViewById(R.id.artist_name);
         }
     }
 }

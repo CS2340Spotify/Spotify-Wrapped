@@ -13,8 +13,12 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class UpdateAccountActivity extends AppCompatActivity {
-    private UserViewModel mViewModel;
+    private UserViewModel model;
+    private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
     private EditText editName, editUsername, editPassword;
 
     @Override
@@ -22,43 +26,56 @@ public class UpdateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_account);
 
-        ImageButton backToSettingsBtn = findViewById(R.id.back_to_settings);
+        Intent intent = getIntent();
+        if (intent != null) {
+            String userId = intent.getStringExtra("userId");
+            String accessToken = intent.getStringExtra("accessToken");
+            model = new ViewModelProvider(this).get(UserViewModel.class);
+            model.getUserInformation(userId, accessToken, this);
+            ImageButton backToSettingsBtn = findViewById(R.id.back_to_settings);
+            backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "missing user ID or access token", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
         editName = findViewById(R.id.edit_name);
         editUsername = findViewById(R.id.edit_username);
         editPassword = findViewById(R.id.update_password);
         Button saveChangesBtn = findViewById(R.id.save_changes);
 
-        mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-
-        backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newName = editName.getText().toString().trim();
+                //String newName = editName.getText().toString().trim();
                 String newUsername = editUsername.getText().toString().trim();
                 String newPassword = editPassword.getText().toString().trim();
+                User currentUser = model.getCurrentUser();
 
-                // creating user object with updated information
-                User updatedUser = new User(newName, "email", "id", "image", newPassword, newUsername, "accessToken", "spotId");
-
-
-                mViewModel.updateUserInformation(updatedUser, UpdateAccountActivity.this);
+                if (currentUser != null) {
+                    User updatedUser = new User(currentUser.getName(), currentUser.getEmail(), currentUser.getId(),
+                            currentUser.getImage(), newPassword, newUsername, currentUser.getAccessToken(),
+                            currentUser.getSpotId());
+                    model.updateUserInformation(updatedUser, UpdateAccountActivity.this);
+                } else {
+                    Toast.makeText(UpdateAccountActivity.this, "data not available", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
         });
 
-
-        backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(UpdateAccountActivity.this, SettingsFragment.class);
-                startActivity(i);
-            }
-        });
     }
+    private void updateUI(User user) {
+        editName.setText(user.getName());
+        editUsername.setText(user.getUsername());
+    }
+
+
 }
+

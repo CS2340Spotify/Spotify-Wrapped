@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 public class User {
     private String name;
@@ -12,14 +13,12 @@ public class User {
     private String id;
     private String image;
     private String password;
-
     private String username;
     private String spotId;
-
     private String accessToken;
     private ArrayList<String> friends;
-
     private LinkedHashMap<String, Wrap> userWraps = new LinkedHashMap<>();
+    private static User currentUser;
 
     public User (String name, String email, String id, String image, String password, String username, String accessToken, String spotId) {
         this.name = name;
@@ -31,6 +30,7 @@ public class User {
         this.accessToken = accessToken;
         this.spotId = spotId;
     }
+
 
     public String getName() {
         return name;
@@ -67,6 +67,18 @@ public class User {
         userWraps.put(key, wrap);
     }
 
+    private HashMap<String, Artist> artists = new HashMap<>();
+
+    public void setArtist(String position, Artist artist) {
+        this.artists.put(position, artist);
+    }
+
+    private HashMap<String, Playlist> playlists = new HashMap<>();
+
+    public void setPlaylist(String key, Playlist playlist) {
+        this.playlists.put(key, playlist);
+    }
+
     public LinkedHashMap<String, Wrap> getUserWraps() {
         return userWraps;
     }
@@ -77,5 +89,19 @@ public class User {
 
     public String getImage() {
         return image;
+    }
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    public void setUsername(String newUsername) {
+        this.username = username;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.spotify_wrapped;
 
+import static com.example.spotify_wrapped.User.setCurrentUser;
 import static com.example.spotify_wrapped.UserItemTimeFrame.LONG;
 import static com.example.spotify_wrapped.UserItemTimeFrame.MEDIUM;
 import static com.example.spotify_wrapped.UserItemTimeFrame.SHORT;
@@ -9,6 +10,7 @@ import  com.example.spotify_wrapped.UserItemTimeFrame;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -49,7 +52,9 @@ public class UserViewModel extends ViewModel {
 
     private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
-    private final DatabaseReference artistData = FirebaseDatabase.getInstance().getReference("artists");
+    private final DatabaseReference followingData = FirebaseDatabase.getInstance().getReference("Following");
+    DatabaseReference playlistsRef = FirebaseDatabase.getInstance().getReference("playlists");
+
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
 
     public void getUserInformation(String id, String token, Activity context) {
@@ -233,6 +238,89 @@ public class UserViewModel extends ViewModel {
         });
     }
 
+    private void getFollowingFromSpotify() {
+        Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me/following?type=artist")
+                .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d("HTTP", "Failed to fetch data: " + e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray artists = (JSONArray) jsonObject.get("items");
+                    for (int i = 0; i < artists.length(); i++) {
+                        JSONObject artist = (JSONObject) artists.get(i);
+                        String id = (String) artist.get("id");
+                        String name = (String) artist.get("name");
+
+                        String imageUrl;
+                        JSONArray images = (JSONArray) artist.get("images");
+                        if (images.isNull(0)) {
+                            imageUrl = null;
+                        } else {
+                            JSONObject imageOb = (JSONObject) images.get(1);
+                            imageUrl = (String) imageOb.get("url");
+                        }
+                        Artist newArtist = new Artist(name, imageUrl, id);
+                        currentUser.setArtist(String.valueOf(i + 1), newArtist);
+                        followingData.child(newArtist.getId()).setValue(newArtist);
+                    }
+                } catch (JSONException e) {
+                    Log.wtf("Http", e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void getPlaylistsFromSpotify() {
+        Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/users/smedjan/playlists")
+                .addHeader("Authorization", "Bearer " + currentUser.getAccessToken())
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d("HTTP", "Failed to fetch data: " + e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray playlists = (JSONArray) jsonObject.get("items");
+                    for (int i = 0; i < playlists.length(); i++) {
+                        JSONObject playlist = (JSONObject) playlists.get(i);
+                        String id = (String) playlist.get("id");
+                        String name = (String) playlist.get("name");
+
+                        String imageUrl;
+                        JSONArray images = (JSONArray) playlist.get("images");
+                        if (images.isNull(0)) {
+                            imageUrl = null;
+                        } else {
+                            JSONObject imageOb = (JSONObject) images.get(1);
+                            imageUrl = (String) imageOb.get("url");
+                        }
+                        ArrayList<String> songs = new ArrayList<>();
+                        Playlist newPlaylist = new Playlist(name, imageUrl, id, songs);
+                        currentUser.setPlaylist(String.valueOf(i + 1), newPlaylist);
+                        playlistsRef.child(newPlaylist.getId()).setValue(newPlaylist);
+                    }
+                } catch (JSONException e) {
+                    Log.wtf("Http", e.getMessage());
+                }
+            }
+        });
+    }
+
     private void getArtistsFromSpotify(UserItemTimeFrame time, Wrap wrap, Activity context) {
         Request request;
         if (time == MEDIUM) {
@@ -308,9 +396,9 @@ public class UserViewModel extends ViewModel {
         String userId = updatedUser.getId();
 
         HashMap<String, Object> updates = new HashMap<>();
-        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
-            updates.put("name", updatedUser.getName());
-        }
+//        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+//            updates.put("name", updatedUser.getName());
+//        }
         if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
             updates.put("username", updatedUser.getUsername());
         }
@@ -324,7 +412,8 @@ public class UserViewModel extends ViewModel {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
-                            currentUser = updatedUser;
+                            //String pass = currentUser.getPassword();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -337,6 +426,8 @@ public class UserViewModel extends ViewModel {
             Toast.makeText(context, "No changes made", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     public User getCurrentUser() {return currentUser;}
 
