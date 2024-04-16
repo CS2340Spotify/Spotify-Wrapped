@@ -93,7 +93,6 @@ public class InsightsFragment extends Fragment {
 
         LLMQueryManager manager = new LLMQueryManager();
         ArrayList<String> preferences = new ArrayList<>();
-        final boolean[] flag = {false};
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
