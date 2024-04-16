@@ -68,7 +68,12 @@ public class PastWrapsAdapter extends BaseAdapter{
         pastWrap = (CardView) inflater.inflate(R.layout.wrap_thumbnail, parent, false);
 
         new DownloadImageFromInternet((ImageView) pastWrap.findViewById(R.id.top_artist_img), context).execute(wraps.get(String.valueOf(position)).getTopArtists().get("1").getImage());
+        pastWrap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
 
         return pastWrap;
@@ -99,4 +104,5 @@ public class PastWrapsAdapter extends BaseAdapter{
             imageView.setImageBitmap(result);
         }
     }
+
 }
