@@ -5,9 +5,11 @@ import static com.example.spotify_wrapped.UserItemTimeFrame.LONG;
 import static com.example.spotify_wrapped.UserItemTimeFrame.MEDIUM;
 import static com.example.spotify_wrapped.UserItemTimeFrame.SHORT;
 
+
 import  com.example.spotify_wrapped.UserItemTimeFrame;
 
 import android.app.Activity;
+
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +53,8 @@ public class UserViewModel extends ViewModel {
     private User currentUser;
     private final OkHttpClient okHttpClient = new OkHttpClient();
     private Call call;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mUserRef;
 
     private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
@@ -130,6 +134,41 @@ public class UserViewModel extends ViewModel {
                 }
             }
         });
+    }
+    public UserViewModel() {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            mUserRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+        }
+    }
+
+    public void deleteAccount(Activity context) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+
+            currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // Delete user data from Firebase Realtime Database
+                        mUserRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Failed to delete user data from Firebase", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+
+                        Toast.makeText(context, "Failed to delete user account", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     /**
