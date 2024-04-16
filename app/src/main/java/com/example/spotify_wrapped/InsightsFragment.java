@@ -5,6 +5,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,6 +98,7 @@ public class InsightsFragment extends Fragment {
             @Override
             public void run() {
                 try {
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
                     Log.d("Prompt", prompt.toString());
                     Response reply = manager.queryPrompt(prompt.toString());
                     ResponseBody replyBody = reply.body();
@@ -105,25 +109,28 @@ public class InsightsFragment extends Fragment {
                     for (int i = 0; i < out.length(); i++) {
                         preferences.add(out.getString(i));
                     }
-                    flag[0] = true;
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<Insight> insights = new ArrayList<>();
+                            for (int i = 0; i < Math.min(preferences.size(), 5); i++) {
+                                String title = "Preference #" + (i + 1);
+                                String description = preferences.get(i);
+                                Log.d("title", title);
+                                Log.d("desc", description);
+                                insights.add(new Insight(title, description));
+                            }
+
+                            RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
+                            InsightsAdapter adapter = new InsightsAdapter(insights);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
         thread.start();
-        while (!flag[0]);
-        List<Insight> insights = new ArrayList<>();
-        for (int i = 0; i < Math.min(preferences.size(), 5); i++) {
-            String title = "Preference #" + (i + 1);
-            String description = preferences.get(i);
-            Log.d("title", title);
-            Log.d("desc", description);
-            insights.add(new Insight(title, description));
-        }
-
-        RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
-        InsightsAdapter adapter = new InsightsAdapter(insights);
-        recyclerView.setAdapter(adapter);
     }
 }
