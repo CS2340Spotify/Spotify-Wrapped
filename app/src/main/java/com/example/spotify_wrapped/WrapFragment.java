@@ -92,7 +92,7 @@ public class WrapFragment extends Fragment {
             wrapBackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceFragment(new PastWrapsFragment());
+                    replaceFragment(new ProfileFragment());
                 }
             });
         }
