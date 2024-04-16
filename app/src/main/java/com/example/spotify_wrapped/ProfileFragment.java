@@ -47,20 +47,20 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
-        RecyclerView playlistsRecyclerView = view.findViewById(R.id.playlists_recycler_view);
-        List<Playlist> playlistsList = new ArrayList<>();
-        playlistsList.add(new Playlist("Playlist 1", "Image URL 1", null, new ArrayList<>()));
-        PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(getContext(), playlistsList);
-        playlistsRecyclerView.setAdapter(playlistsAdapter);
+//        RecyclerView playlistsRecyclerView = view.findViewById(R.id.playlists_recycler_view);
+//        List<Playlist> playlistsList = new ArrayList<>();
+//        playlistsList.add(new Playlist("Playlist 1", "Image URL 1", null, new ArrayList<>()));
+//        PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(getContext(), playlistsList);
+//        playlistsRecyclerView.setAdapter(playlistsAdapter);
 
-        RecyclerView followingRecyclerView = view.findViewById(R.id.following_recycler_view);
-        List<Following> followingList = new ArrayList<>();
-        followingList.add(new Following("Artist 1", "Image URL 1"));
-        FollowingAdapter followingAdapter = new FollowingAdapter(getContext(), followingList);
-        followingRecyclerView.setAdapter(followingAdapter);
+//        RecyclerView followingRecyclerView = view.findViewById(R.id.following_recycler_view);
+//        List<Following> followingList = new ArrayList<>();
+//        followingList.add(new Following("Artist 1", "Image URL 1"));
+//        FollowingAdapter followingAdapter = new FollowingAdapter(getContext(), followingList);
+//        followingRecyclerView.setAdapter(followingAdapter);
 
         GridView pastWraps = view.findViewById(R.id.past_wraps_grid);
-        pastWrapsAdapter = new PastWrapsAdapter(getActivity(), model.getCurrentUser().getUserWraps());
+        pastWrapsAdapter = new PastWrapsAdapter(getActivity(), model.getCurrentUser().getUserWraps(), getFragmentManager());
         pastWraps.setAdapter(pastWrapsAdapter);
 
         return view;

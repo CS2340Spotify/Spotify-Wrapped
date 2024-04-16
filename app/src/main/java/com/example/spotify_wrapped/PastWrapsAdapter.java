@@ -28,6 +28,8 @@ import java.util.Date;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.spotify_wrapped.Wrap;
 
@@ -36,14 +38,16 @@ import java.util.LinkedHashMap;
 
 public class PastWrapsAdapter extends BaseAdapter{
     private Activity context;
+    private FragmentManager fragmentManager;
     private LinkedHashMap<String, Wrap> wraps;
     LayoutInflater inflater;
 
 
-    public PastWrapsAdapter(Activity context, LinkedHashMap<String, Wrap> wraps) {
+    public PastWrapsAdapter(Activity context, LinkedHashMap<String, Wrap> wraps, FragmentManager fragmentManager) {
         this.context = context;
         this.wraps = wraps;
         inflater = (LayoutInflater.from(context));
+        this.fragmentManager = fragmentManager;
 
     }
 
@@ -71,7 +75,10 @@ public class PastWrapsAdapter extends BaseAdapter{
         pastWrap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                WrapFragment clickedWrap = new WrapFragment(wraps.get(String.valueOf(position)));
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, clickedWrap);
+                fragmentTransaction.commit();
             }
         });
 
