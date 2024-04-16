@@ -1,6 +1,5 @@
 package com.example.spotify_wrapped;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,18 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-
 public class ProfileFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -36,6 +35,9 @@ public class ProfileFragment extends Fragment {
     private PastWrapsAdapter pastWrapsAdapter;
 
     private UserViewModel model;
+    private UpdateAccountActivity updateUser;
+
+    private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -74,8 +76,21 @@ public class ProfileFragment extends Fragment {
         bottomNavigationView.setVisibility(View.VISIBLE);
 
         View settingsButton = view.findViewById(R.id.settings_button);
-//        View wrapButton = view.findViewById(R.id.wrap_button);
-//        View pastWrapsButton = view.findViewById(R.id.past_wraps_button);
+
+        ImageView profileImage = view.findViewById(R.id.profile_image);
+        TextView profileName = view.findViewById(R.id.profile_name);
+        TextView profileUsername = view.findViewById(R.id.profile_username);
+
+        User currentUser = model.getCurrentUser();
+
+        String currentUserName = currentUser.getName();
+        String currentUserUsername = currentUser.getUsername();
+        String currentUserImage = currentUser.getImage();
+
+        profileName.setText(currentUserName);
+        profileUsername.setText("@"+currentUserUsername);
+
+        WrapFragment.DownloadImageFromInternet downloadImageFromInternet = (WrapFragment.DownloadImageFromInternet) new WrapFragment.DownloadImageFromInternet(profileImage, getActivity()).execute(currentUserImage);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +114,6 @@ public class ProfileFragment extends Fragment {
 //        });
 
     }
-
-
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getFragmentManager();

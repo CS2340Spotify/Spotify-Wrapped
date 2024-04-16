@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -396,9 +398,9 @@ public class UserViewModel extends ViewModel {
         String userId = updatedUser.getId();
 
         HashMap<String, Object> updates = new HashMap<>();
-//        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
-//            updates.put("name", updatedUser.getName());
-//        }
+        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+            updates.put("name", updatedUser.getName());
+        }
         if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
             updates.put("username", updatedUser.getUsername());
         }
@@ -411,6 +413,10 @@ public class UserViewModel extends ViewModel {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            if (updates.containsKey("password")) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                user.updatePassword(updatedUser.getPassword());
+                            }
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
                             //String pass = currentUser.getPassword();
 
@@ -426,8 +432,6 @@ public class UserViewModel extends ViewModel {
             Toast.makeText(context, "No changes made", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     public User getCurrentUser() {return currentUser;}
 
