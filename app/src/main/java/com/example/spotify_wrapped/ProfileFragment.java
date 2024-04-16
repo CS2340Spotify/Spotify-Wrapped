@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +30,9 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
 
     private UserViewModel model;
+    private UpdateAccountActivity updateUser;
+
+    private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -65,17 +70,17 @@ public class ProfileFragment extends Fragment {
         View wrapButton = view.findViewById(R.id.wrap_button);
         View pastWrapsButton = view.findViewById(R.id.past_wraps_button);
         ImageView profileImage = view.findViewById(R.id.profile_image);
+        TextView profileName = view.findViewById(R.id.profile_name);
         TextView profileUsername = view.findViewById(R.id.profile_username);
-        TextView profileEmail = view.findViewById(R.id.profile_email);
 
         User currentUser = model.getCurrentUser();
 
+        String currentUserName = currentUser.getName();
         String currentUserUsername = currentUser.getUsername();
-        String currentUserEmail = currentUser.getEmail();
         String currentUserImage = currentUser.getImage();
 
-        profileUsername.setText(currentUserUsername);
-        profileEmail.setText(currentUserEmail);
+        profileName.setText(currentUserName);
+        profileUsername.setText("@"+currentUserUsername);
 
         WrapFragment.DownloadImageFromInternet downloadImageFromInternet = (WrapFragment.DownloadImageFromInternet) new WrapFragment.DownloadImageFromInternet(profileImage, getActivity()).execute(currentUserImage);
 
