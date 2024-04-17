@@ -168,7 +168,8 @@ public class MainActivity extends AppCompatActivity {
                 String accessToken = intent.getStringExtra("accessToken");
                 Log.wtf("huh", id);
                 model = new ViewModelProvider(this).get(UserViewModel.class);
-                model.getUserInformation(id, accessToken, this);
+                //model.getUserInformation(id, accessToken, this);
+                model.getUserInformation(id, accessToken);
             }
         }
     }
