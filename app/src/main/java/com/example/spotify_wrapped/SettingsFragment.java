@@ -92,6 +92,7 @@ public class SettingsFragment extends Fragment {
 
         settingsBackBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
                 replaceFragment(new ProfileFragment());
             }
         });
