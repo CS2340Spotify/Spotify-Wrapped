@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,46 +93,57 @@ public class InsightsFragment extends Fragment {
             }
         }
 
+        List<Insight> dummyInsights = new ArrayList<>();
+        dummyInsights.add(new Insight("Loading...", "Your insights will appear here soon..."));
+        RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
+        InsightsAdapter adapter = new InsightsAdapter(dummyInsights);
+        recyclerView.setAdapter(adapter);
+
         LLMQueryManager manager = new LLMQueryManager();
-        ArrayList<String> preferences = new ArrayList<>();
-        final boolean[] flag = {false};
-        Thread thread = new Thread(new Runnable() {
+        HandlerThread thread = new HandlerThread("API_CALL");
+        thread.start();
+        Handler requestHandler = new Handler(thread.getLooper());
+        final Handler responseHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                ArrayList<String> preferences = (ArrayList<String>) msg.obj;
+                List<Insight> insights = new ArrayList<>();
+                for (int i = 0; i < Math.min(preferences.size(), 4); i++) {
+                    String title = "Insight #" + (i + 1);
+                    String description = preferences.get(i);
+                    insights.add(new Insight(title, description));
+                }
+
+                RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
+                InsightsAdapter adapter = new InsightsAdapter(insights);
+                recyclerView.setAdapter(adapter);
+            }
+        };
+
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                    Log.d("Prompt", prompt.toString());
                     Response reply = manager.queryPrompt(prompt.toString());
                     ResponseBody replyBody = reply.body();
-                    JSONObject replyJson = new JSONObject(replyBody.string());
+                    assert replyBody != null;
+                    String res = replyBody.string();
+                    JSONObject replyJson = new JSONObject(res);
                     String output = replyJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
                     JSONObject jsonOutput = new JSONObject(output);
                     JSONArray out = jsonOutput.getJSONArray("preferences");
+                    Message msg = new Message();
+                    ArrayList<String> preferences = new ArrayList<>();
                     for (int i = 0; i < out.length(); i++) {
                         preferences.add(out.getString(i));
                     }
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<Insight> insights = new ArrayList<>();
-                            for (int i = 0; i < Math.min(preferences.size(), 5); i++) {
-                                String title = "Preference #" + (i + 1);
-                                String description = preferences.get(i);
-                                Log.d("title", title);
-                                Log.d("desc", description);
-                                insights.add(new Insight(title, description));
-                            }
-
-                            RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
-                            InsightsAdapter adapter = new InsightsAdapter(insights);
-                            recyclerView.setAdapter(adapter);
-                        }
-                    });
+                    msg.obj = preferences;
+                    responseHandler.sendMessage(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        });
-        thread.start();
+        };
+        requestHandler.post(myRunnable);
     }
 }

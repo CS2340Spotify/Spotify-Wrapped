@@ -21,8 +21,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +38,8 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private PastWrapsAdapter pastWrapsAdapter;
-
+    private TextView profileName;
+    private TextView profileUsername;
     private UserViewModel model;
     private UpdateAccountActivity updateUser;
 
@@ -65,6 +71,7 @@ public class ProfileFragment extends Fragment {
         pastWrapsAdapter = new PastWrapsAdapter(getActivity(), model.getCurrentUser().getUserWraps(), getFragmentManager());
         pastWraps.setAdapter(pastWrapsAdapter);
 
+
         return view;
     }
 
@@ -78,18 +85,27 @@ public class ProfileFragment extends Fragment {
         View settingsButton = view.findViewById(R.id.settings_button);
 
         ImageView profileImage = view.findViewById(R.id.profile_image);
-        TextView profileName = view.findViewById(R.id.profile_name);
-        TextView profileUsername = view.findViewById(R.id.profile_username);
+        profileName = view.findViewById(R.id.profile_name);
+        profileUsername = view.findViewById(R.id.profile_username);
 
         User currentUser = model.getCurrentUser();
 
-        String currentUserName = currentUser.getName();
-        String currentUserUsername = currentUser.getUsername();
         String currentUserImage = currentUser.getImage();
+        String currentName = currentUser.getName();
+        String currentUsername = currentUser.getUsername();
 
-        profileName.setText(currentUserName);
-        profileUsername.setText("@"+currentUserUsername);
+        profileName.setText(currentName);
+        profileUsername.setText("@"+currentUsername);
 
+        model.getCurrentUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            String updatedCurrentName = user.getName();
+            String updatedUsername = user.getUsername();
+            profileName.setText(updatedCurrentName);
+            profileUsername.setText("@"+updatedUsername);
+        });
+
+//        profileName.setText(currentUserName);
+//        profileUsername.setText("@"+currentUserUsername);
         WrapFragment.DownloadImageFromInternet downloadImageFromInternet = (WrapFragment.DownloadImageFromInternet) new WrapFragment.DownloadImageFromInternet(profileImage, getActivity()).execute(currentUserImage);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +130,19 @@ public class ProfileFragment extends Fragment {
 //        });
 
     }
+
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        User updatedUser = snapshot.getValue(User.class);
+        if (updatedUser != null) {
+            // Update UI with the latest data fetched from Firebase
+            String updatedCurrentName = updatedUser.getName();
+            String updatedUsername = updatedUser.getUsername();
+            profileName.setText(updatedCurrentName);
+            profileUsername.setText("@" + updatedUsername);
+
+        }
+    }
+
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getFragmentManager();

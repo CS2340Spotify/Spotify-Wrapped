@@ -30,7 +30,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
             String userId = intent.getStringExtra("userId");
             String accessToken = intent.getStringExtra("accessToken");
             model = new ViewModelProvider(this).get(UserViewModel.class);
-            model.getUserInformation(userId, accessToken, this);
+            model.getUserInformation(userId, accessToken);
             ImageButton backToSettingsBtn = findViewById(R.id.back_to_settings);
             backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

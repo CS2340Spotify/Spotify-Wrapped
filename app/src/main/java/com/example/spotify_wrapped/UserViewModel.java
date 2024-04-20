@@ -56,6 +56,9 @@ public class UserViewModel extends ViewModel {
     private FirebaseAuth mAuth;
     private DatabaseReference mUserRef;
 
+
+    private MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
     private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
     private final DatabaseReference followingData = FirebaseDatabase.getInstance().getReference("Following");
@@ -63,7 +66,7 @@ public class UserViewModel extends ViewModel {
 
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
 
-    public void getUserInformation(String id, String token, Activity context) {
+    public void getUserInformation(String id, String token) {
         if (id == null) {
             Log.wtf("what the fuck", "shit is null");
             return;
@@ -92,42 +95,6 @@ public class UserViewModel extends ViewModel {
                                 currentUser.setWrap(String.valueOf(i), newWrap);
                             }
                         }
-                        System.out.println("hi");
-//                        if (vals.get("topArtists") == null) {
-//                            getArtistsFromSpotify();
-//                        } else {
-//                            ArrayList<HashMap<String,Object>> artists = (ArrayList<HashMap<String, Object>>) vals.get("topArtists");
-//                            for (int i = 1; i <= 10; i++) {
-//                                HashMap<String, Object> artist = (HashMap<String, Object>) artists.get(i);
-//                                String artistImage = (String) artist.get("image");
-//                                String artistName = (String) artist.get("name");
-//                                String artistId = (String) artist.get("id");
-//                                Artist newArtist = new Artist(artistName, artistImage, artistId);
-//                                ArrayList<String> genres = (ArrayList<String>) artist.get("genres");
-//                                for (int j = 1; j < genres.size(); j++) {
-//                                    newArtist.setGenres(String.valueOf(j), genres.get(j));
-//                                }
-//                                currentUser.setArtist(String.valueOf(i), newArtist);
-//                            }
-//                        }
-//                        if (vals.get("topTracks") == null) {
-//                            getTracksFromSpotify();;
-//                        } else {
-//                            ArrayList<HashMap<String,Object>> tracks = (ArrayList<HashMap<String, Object>>) vals.get("topTracks");
-//                            for (int i = 1; i <= 20; i++) {
-//                                HashMap<String, Object> track = (HashMap<String, Object>) tracks.get(i);
-//                                String albumImage = (String) track.get("albumImage");
-//                                String albumName = (String) track.get("albumName");
-//                                String id = (String) track.get("id");
-//                                String trackName = (String) track.get("trackName");
-//                                Track newTrack = new Track(trackName, albumName, albumImage, id);
-//                                ArrayList<String> artists = (ArrayList<String>) track.get("artists");
-//                                for (int j = 1; j < artists.size(); j++) {
-//                                    newTrack.setArtists(String.valueOf(j), artists.get(j));
-//                                }
-//                                currentUser.setTrack(String.valueOf(i), newTrack);
-//                            }
-//                        }
                     } catch (Exception e) {
                         Log.wtf("JSON", "JSON Error");
                     }
@@ -460,6 +427,7 @@ public class UserViewModel extends ViewModel {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 user.updatePassword(updatedUser.getPassword());
                             }
+                            userLiveData.postValue(updatedUser);
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
                             //String pass = currentUser.getPassword();
 
@@ -476,7 +444,14 @@ public class UserViewModel extends ViewModel {
         }
     }
 
-    public User getCurrentUser() {return currentUser;}
+    public LiveData<User> getCurrentUserLiveData() {
+        return userLiveData;
+    }
+
+    public User getCurrentUser() {
+
+        getUserInformation(currentUser.getId(), currentUser.getAccessToken());
+        return currentUser;}
 
 
 }
