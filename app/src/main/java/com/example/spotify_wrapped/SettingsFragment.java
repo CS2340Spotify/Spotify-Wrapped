@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class SettingsFragment extends Fragment {
 
     private UserViewModel model;
+    View deleteAccountBtn;
     //private User currentUser;
 
 
@@ -37,6 +38,7 @@ public class SettingsFragment extends Fragment {
     }
     View updateProfileBtn;
     private User currentUser;
+
 
     View settingsBackBtn;
     View darkLightBtn;
@@ -65,6 +67,7 @@ public class SettingsFragment extends Fragment {
         bottomNavigationView.setVisibility(View.GONE);
 
         updateProfileBtn = view.findViewById(R.id.update_profile);
+        deleteAccountBtn = view.findViewById(R.id.delete_account);
         settingsBackBtn = view.findViewById(R.id.settings_back_button);
         darkLightBtn = view.findViewById(R.id.dark_light_mode);
         sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -94,6 +97,18 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
                 replaceFragment(new ProfileFragment());
+            }
+        });
+        // Delete account button click listener
+        deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the deleteAccount() method from the ViewModel
+                model.deleteAccount(requireActivity());
+                // Navigate back to the login or registration screen
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish(); // Close the current activity
             }
         });
 
