@@ -157,6 +157,10 @@ public class UserViewModel extends ViewModel {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                    // Redirect to login screen after successful deletion
+                                    Intent intent = new Intent(context, LoginActivity.class);
+                                    context.startActivity(intent);
+                                    context.finish(); // Close the current activity
                                 } else {
                                     Toast.makeText(context, "Failed to delete user data from Firebase", Toast.LENGTH_SHORT).show();
                                 }
