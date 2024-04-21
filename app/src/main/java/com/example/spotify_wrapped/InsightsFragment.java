@@ -111,6 +111,7 @@ public class InsightsFragment extends Fragment {
             }
         }
 
+        currentUser.getUserWraps().remove(String.valueOf(currentUser.getUserWraps().size() - 1));
         List<Insight> dummyInsights = new ArrayList<>();
         dummyInsights.add(new Insight("Loading...", "Your insights will appear here soon..."));
         RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
