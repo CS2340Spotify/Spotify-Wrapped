@@ -248,7 +248,7 @@ public class SpotifyAuthenticator {
 
 
     public void createNewUser(Activity context, String accessToken, String username, String password) throws IllegalArgumentException {
-        if (username.equals("") || password.equals("")) {
+        if (username.equals("") || password.equals("") || password.length() < 6) {
             throw new IllegalArgumentException();
         }
         Request request = new Request.Builder()
