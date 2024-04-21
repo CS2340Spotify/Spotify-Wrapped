@@ -55,6 +55,9 @@ public class UserViewModel extends ViewModel {
     private Call call;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserRef;
+    private DatabaseReference idHash;
+    private DatabaseReference idRef;
+
 
 
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
@@ -102,45 +105,44 @@ public class UserViewModel extends ViewModel {
             }
         });
     }
-    public UserViewModel() {
+    public void deleteAccount(Activity context) {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        DatabaseReference mUserRef;
+        DatabaseReference idRef;
+
         if (currentUser != null) {
+            // Initializes database references
             mUserRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
-        }
-    }
+            idRef = FirebaseDatabase.getInstance().getReference("id_hash").child(this.currentUser.getSpotId());
 
-    public void deleteAccount(Activity context) {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-
-            currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        // Delete user data from Firebase Realtime Database
-                        mUserRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
-                                    // Redirect to login screen after successful deletion
-                                    Intent intent = new Intent(context, LoginActivity.class);
-                                    context.startActivity(intent);
-                                    context.finish(); // Close the current activity
-                                } else {
-                                    Toast.makeText(context, "Failed to delete user data from Firebase", Toast.LENGTH_SHORT).show();
-                                }
+            // Deletes user's authentication credentials
+            currentUser.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Remove user data from Firebase Realtime Database and id hash
+                                mUserRef.removeValue();
+                                idRef.removeValue()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(context, "Failed to delete user ID from hash", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(context, "Failed to delete user account", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                    } else {
-
-                        Toast.makeText(context, "Failed to delete user account", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                        }
+                    });
         }
     }
+
 
     /**
      * Returns a new wrapped with one of the set time frames given by the spotify API. Another
