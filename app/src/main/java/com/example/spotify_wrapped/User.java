@@ -31,7 +31,9 @@ public class User {
         this.spotId = spotId;
     }
 
+    public User (){
 
+    }
     public String getName() {
         return name;
     }

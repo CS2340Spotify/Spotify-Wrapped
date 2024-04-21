@@ -69,16 +69,16 @@ public class SettingsFragment extends Fragment {
         updateProfileBtn = view.findViewById(R.id.update_profile);
         deleteAccountBtn = view.findViewById(R.id.delete_account);
         settingsBackBtn = view.findViewById(R.id.settings_back_button);
-        darkLightBtn = view.findViewById(R.id.dark_light_mode);
-        sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", false);
+//        darkLightBtn = view.findViewById(R.id.dark_light_mode);
+//        sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//        isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", false);
 
-        if(isDarkModeEnabled) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        if(isDarkModeEnabled) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
         // on click listener for the button
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override

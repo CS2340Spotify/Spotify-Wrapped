@@ -63,31 +63,31 @@
 
                         </LinearLayout>
 
-                        <Button
-                            android:id="@+id/notification_preferences"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="40dp"
-                            android:backgroundTint="@color/white"
-                            android:fontFamily="@font/circular_std_medium_500"
-                            android:paddingLeft="25dp"
-                            android:text="Notification Preferences"
-                            android:textColor="@color/black"
-                            android:textColorHighlight="@color/white"
-                            android:textStyle="bold" />
+<!--                        <Button-->
+<!--                            android:id="@+id/notification_preferences"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            android:layout_marginTop="40dp"-->
+<!--                            android:backgroundTint="@color/white"-->
+<!--                            android:fontFamily="@font/circular_std_medium_500"-->
+<!--                            android:paddingLeft="25dp"-->
+<!--                            android:text="Notification Preferences"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textColorHighlight="@color/white"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <Button
-                            android:id="@+id/dark_light_mode"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="20dp"
-                            android:backgroundTint="@color/white"
-                            android:fontFamily="@font/circular_std_medium_500"
-                            android:paddingLeft="25dp"
-                            android:text="Dark-Light Mode"
-                            android:textColor="@color/black"
-                            android:textColorHighlight="@color/white"
-                            android:textStyle="bold" />
+<!--                        <Button-->
+<!--                            android:id="@+id/dark_light_mode"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            android:layout_marginTop="20dp"-->
+<!--                            android:backgroundTint="@color/white"-->
+<!--                            android:fontFamily="@font/circular_std_medium_500"-->
+<!--                            android:paddingLeft="25dp"-->
+<!--                            android:text="Dark-Light Mode"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textColorHighlight="@color/white"-->
+<!--                            android:textStyle="bold" />-->
 
                         <Button
                             android:id="@+id/update_profile"

@@ -57,6 +57,7 @@ public class UserViewModel extends ViewModel {
     private DatabaseReference mUserRef;
     private DatabaseReference idHash;
     private DatabaseReference idRef;
+    private Boolean infoGathered = false;
 
 
 
@@ -68,6 +69,24 @@ public class UserViewModel extends ViewModel {
     DatabaseReference playlistsRef = FirebaseDatabase.getInstance().getReference("playlists");
 
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
+    private final Object lock = new Object();
+
+    public void getUserInformationSynch(String id, String token, MainActivity context) {
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                getUserInformation(id, token);
+                synchronized(lock) {
+                    try {
+                        lock.wait();
+                        context.replaceFragment(new ProfileFragment());
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        t.start();
+    }
 
     public void getUserInformation(String id, String token) {
         if (id == null) {
@@ -97,6 +116,9 @@ public class UserViewModel extends ViewModel {
                                 Wrap newWrap = new Wrap(wrap);
                                 currentUser.setWrap(String.valueOf(i), newWrap);
                             }
+                        }
+                        synchronized (lock) {
+                            lock.notify();
                         }
                     } catch (Exception e) {
                         Log.wtf("JSON", "JSON Error");
@@ -493,5 +515,8 @@ public class UserViewModel extends ViewModel {
         getUserInformation(currentUser.getId(), currentUser.getAccessToken());
         return currentUser;}
 
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
 
 }

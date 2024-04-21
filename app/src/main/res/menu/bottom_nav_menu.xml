@@ -14,9 +14,4 @@
     <item android:id="@+id/add_wrap"
         android:icon="@drawable/baseline_add_24"
         android:title="New Wrap"/>
-    <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/white_profile_icon"
-        android:title="@string/profile_icon"
-        />
 </menu>

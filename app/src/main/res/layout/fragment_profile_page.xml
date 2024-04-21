@@ -33,7 +33,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/circular_std_medium_500"
-            android:text="Profile"
+            android:text="Home"
             android:paddingBottom="7dp"
             android:background="@drawable/green_underline"
             android:textColor="@color/white"
