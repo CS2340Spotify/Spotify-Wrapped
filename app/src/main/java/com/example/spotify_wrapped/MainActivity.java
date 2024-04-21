@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);
+        binding.bottomNavigationView.setVisibility(View.VISIBLE);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 

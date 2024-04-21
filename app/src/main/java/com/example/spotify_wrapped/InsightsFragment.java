@@ -48,7 +48,7 @@ public class InsightsFragment extends Fragment {
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         User currentUser = model.getCurrentUser();
 
-        Wrap wrap = model.makeNewWrapped(UserItemTimeFrame.SHORT, getActivity());
+        Wrap wrap = model.makeNewWrappedInsights(UserItemTimeFrame.SHORT, getActivity());
         List<Artist> topArtistsList = null;
         List<Track> topTracksList = null;
         List<String> topGenresList = null;

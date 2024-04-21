@@ -64,7 +64,7 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setVisibility(View.GONE);
+//        bottomNavigationView.setVisibility(View.GONE);
 
         updateProfileBtn = view.findViewById(R.id.update_profile);
         deleteAccountBtn = view.findViewById(R.id.delete_account);
@@ -106,9 +106,9 @@ public class SettingsFragment extends Fragment {
                 // Call the deleteAccount() method from the ViewModel
                 model.deleteAccount(requireActivity());
                 // Navigate back to the login or registration screen
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                getActivity().finish(); // Close the current activity
+//                Intent intent = new Intent(getActivity(), LoginActivity.class);
+//                startActivity(intent);
+                getActivity().recreate();
             }
         });
 

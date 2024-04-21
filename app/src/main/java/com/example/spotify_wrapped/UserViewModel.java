@@ -123,18 +123,26 @@ public class UserViewModel extends ViewModel {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 // Remove user data from Firebase Realtime Database and id hash
-                                mUserRef.removeValue();
-                                idRef.removeValue()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(context, "Failed to delete user ID from hash", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
+                                mUserRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            idRef.removeValue()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                Toast.makeText(context, "Failed to delete user ID from hash", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        } else {
+                                            Log.wtf("hi", "hi");
+                                        }
+                                    }
+                                });
                             } else {
                                 Toast.makeText(context, "Failed to delete user account", Toast.LENGTH_SHORT).show();
                             }
@@ -178,6 +186,36 @@ public class UserViewModel extends ViewModel {
         }
         currentUser.setWrap(String.valueOf(currentUser.getUserWraps().size()), newWrap);
         user.child(currentUser.getId()).child("wraps").setValue(currentUser.getUserWraps());
+        return newWrap;
+    }
+
+    public Wrap makeNewWrappedInsights(UserItemTimeFrame time, Activity context) {
+        Long dateNow = System.currentTimeMillis() / 1000L;
+        Long dateFrom;
+        if (time == LONG) {
+            dateFrom = dateNow - 31556926L;
+        } else if (time == MEDIUM) {
+            dateFrom = dateNow - 15778458L;
+        } else {
+            dateFrom = dateNow - 2629743L;
+        }
+        Wrap newWrap = new Wrap(dateNow, dateFrom);
+        getTracksFromSpotify(time, newWrap, context);
+        synchronized(newWrap.getTopTracks()) {
+            try {
+                newWrap.getTopTracks().wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        getArtistsFromSpotify(time, newWrap, context);
+        synchronized(newWrap.getTopArtists()) {
+            try {
+                newWrap.getTopArtists().wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return newWrap;
     }
 

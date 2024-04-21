@@ -52,6 +52,7 @@ import org.json.JSONObject;
 
 
 import java.io.IOException;
+import java.util.HashMap;
 
 
 import okhttp3.Call;
@@ -194,11 +195,32 @@ public class SpotifyAuthenticator {
                                 } else {
                                     Toast.makeText(context, "Logging you in to existing account", Toast.LENGTH_SHORT).show();
                                     userId = (String) task.getResult().getValue();
-                                    Intent intent = new Intent(context, MainActivity.class);
-                                    intent.putExtra("currentUserId", userId);
-                                    intent.putExtra("accessToken", accessToken);
-                                    context.setResult(-1, intent);
-                                    context.finish();
+                                    mDatabase.child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            HashMap<String, Object> vals = (HashMap<String, Object>) task.getResult().getValue();
+                                            String email = (String) vals.get("email");
+                                            String password = (String) vals.get("password");
+                                            mAuth.signInWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            if (task.isSuccessful()) {
+                                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                                userId = user.getUid();
+                                                                Intent intent = new Intent(context, MainActivity.class);
+                                                                intent.putExtra("currentUserId", userId);
+                                                                intent.putExtra("accessToken", accessToken);
+                                                                context.setResult(-1, intent);
+                                                                context.finish();
+                                                            } else {
+                                                                Toast.makeText(context, "Invalid Credentials",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    });
                                 }
                             }
                         }
