@@ -99,7 +99,6 @@ public class ProfileFragment extends Fragment {
                 replaceFragment(new PastWrapsFragment());
             }
         });
-
     }
 
     private void replaceFragment(Fragment fragment) {
