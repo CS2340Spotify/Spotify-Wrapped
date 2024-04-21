@@ -72,7 +72,13 @@ public class InsightsFragment extends Fragment {
         if (topArtistsList != null) {
             prompt.append("Here are the users top artists: ");
             for (Artist a : topArtistsList) {
-                prompt.append(a.getName());
+                for (int i = 0; i < a.getName().length(); i++) {
+                    if (a.getName().charAt(i) =='"') {
+                        prompt.append("'");
+                    } else {
+                        prompt.append(a.getName().charAt(i));
+                    }
+                }
                 prompt.append(",");
             }
         }
@@ -80,7 +86,13 @@ public class InsightsFragment extends Fragment {
         if (topGenresList != null) {
             prompt.append("Here are the users top genres: ");
             for (String a : topGenresList) {
-                prompt.append(a);
+                for (int i = 0; i < a.length(); i++) {
+                    if (a.charAt(i) =='"') {
+                        prompt.append("'");
+                    } else {
+                        prompt.append(a.charAt(i));
+                    }
+                }
                 prompt.append(", ");
             }
         }
@@ -88,7 +100,13 @@ public class InsightsFragment extends Fragment {
         if (topTracksList != null) {
             prompt.append("Here are the users top tracks: ");
             for (Track a : topTracksList) {
-                prompt.append(a.getTrackName());
+                for (int i = 0; i < a.getTrackName().length(); i++) {
+                    if (a.getTrackName().charAt(i) =='"') {
+                        prompt.append("'");
+                    } else {
+                        prompt.append(a.getTrackName().charAt(i));
+                    }
+                }
                 prompt.append(", ");
             }
         }
