@@ -3,6 +3,7 @@ package com.example.spotify_wrapped;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.app.AlertDialog;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,22 +66,10 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
-//        bottomNavigationView.setVisibility(View.GONE);
-
         updateProfileBtn = view.findViewById(R.id.update_profile);
         deleteAccountBtn = view.findViewById(R.id.delete_account);
         settingsBackBtn = view.findViewById(R.id.settings_back_button);
-//        darkLightBtn = view.findViewById(R.id.dark_light_mode);
-//        sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-//        isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", false);
 
-//        if(isDarkModeEnabled) {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//
-//        } else {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//        }
         // on click listener for the button
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,12 +94,29 @@ public class SettingsFragment extends Fragment {
         deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Call the deleteAccount() method from the ViewModel
-                model.deleteAccount(requireActivity());
-                // Navigate back to the login or registration screen
-//                Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                startActivity(intent);
-                getActivity().recreate();
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
+                builder.setMessage("Are you sure you want to delete your account?");
+
+                builder.setTitle("Confirm Account Deletion");
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User taps OK button, proceed with account deletion
+                        model.deleteAccount(requireActivity());
+                        // Navigate back to the login or registration screen
+                        getActivity().recreate();
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
