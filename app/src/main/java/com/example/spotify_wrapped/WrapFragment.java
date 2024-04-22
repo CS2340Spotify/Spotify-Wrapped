@@ -156,14 +156,14 @@ public class WrapFragment extends Fragment {
             wrapBackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceFragment(new ChooseTimeWrapFragment());
+                    replaceFragment(new ProfileFragment());
                 }
             });
         } else {
             wrapBackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceFragment(new ChooseTimeWrapFragment());
+                    replaceFragment(new ProfileFragment());
                 }
             });
         }
