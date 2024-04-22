@@ -18,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UpdateAccountActivity extends AppCompatActivity {
     private UserViewModel model;
-    private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
     private EditText editName, editUsername, editPassword;
 
     @Override
@@ -31,7 +30,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
             String userId = intent.getStringExtra("userId");
             String accessToken = intent.getStringExtra("accessToken");
             model = new ViewModelProvider(this).get(UserViewModel.class);
-            model.getUserInformation(userId, accessToken, this);
+            model.getUserInformation(userId, accessToken);
             ImageButton backToSettingsBtn = findViewById(R.id.back_to_settings);
             backToSettingsBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -53,13 +52,13 @@ public class UpdateAccountActivity extends AppCompatActivity {
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String newName = editName.getText().toString().trim();
+                String newName = editName.getText().toString().trim();
                 String newUsername = editUsername.getText().toString().trim();
                 String newPassword = editPassword.getText().toString().trim();
                 User currentUser = model.getCurrentUser();
 
                 if (currentUser != null) {
-                    User updatedUser = new User(currentUser.getName(), currentUser.getEmail(), currentUser.getId(),
+                    User updatedUser = new User(newName, currentUser.getEmail(), currentUser.getId(),
                             currentUser.getImage(), newPassword, newUsername, currentUser.getAccessToken(),
                             currentUser.getSpotId());
                     model.updateUserInformation(updatedUser, UpdateAccountActivity.this);
@@ -67,15 +66,11 @@ public class UpdateAccountActivity extends AppCompatActivity {
                     Toast.makeText(UpdateAccountActivity.this, "data not available", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+
             }
         });
 
     }
-    private void updateUI(User user) {
-        editName.setText(user.getName());
-        editUsername.setText(user.getUsername());
-    }
-
 
 }
 

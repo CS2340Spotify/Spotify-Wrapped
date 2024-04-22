@@ -31,7 +31,9 @@ public class User {
         this.spotId = spotId;
     }
 
+    public User (){
 
+    }
     public String getName() {
         return name;
     }
@@ -71,12 +73,6 @@ public class User {
 
     public void setArtist(String position, Artist artist) {
         this.artists.put(position, artist);
-    }
-
-    private HashMap<String, Playlist> playlists = new HashMap<>();
-
-    public void setPlaylist(String key, Playlist playlist) {
-        this.playlists.put(key, playlist);
     }
 
     public LinkedHashMap<String, Wrap> getUserWraps() {

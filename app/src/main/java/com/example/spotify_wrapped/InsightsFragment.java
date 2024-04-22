@@ -5,6 +5,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +48,7 @@ public class InsightsFragment extends Fragment {
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         User currentUser = model.getCurrentUser();
 
-        Wrap wrap = model.makeNewWrapped(UserItemTimeFrame.SHORT, getActivity());
+        Wrap wrap = model.makeNewWrappedInsights(UserItemTimeFrame.SHORT, getActivity());
         List<Artist> topArtistsList = null;
         List<Track> topTracksList = null;
         List<String> topGenresList = null;
@@ -67,7 +72,13 @@ public class InsightsFragment extends Fragment {
         if (topArtistsList != null) {
             prompt.append("Here are the users top artists: ");
             for (Artist a : topArtistsList) {
-                prompt.append(a.getName());
+                for (int i = 0; i < a.getName().length(); i++) {
+                    if (a.getName().charAt(i) =='"') {
+                        prompt.append("'");
+                    } else {
+                        prompt.append(a.getName().charAt(i));
+                    }
+                }
                 prompt.append(",");
             }
         }
@@ -75,7 +86,13 @@ public class InsightsFragment extends Fragment {
         if (topGenresList != null) {
             prompt.append("Here are the users top genres: ");
             for (String a : topGenresList) {
-                prompt.append(a);
+                for (int i = 0; i < a.length(); i++) {
+                    if (a.charAt(i) =='"') {
+                        prompt.append("'");
+                    } else {
+                        prompt.append(a.charAt(i));
+                    }
+                }
                 prompt.append(", ");
             }
         }
@@ -83,47 +100,69 @@ public class InsightsFragment extends Fragment {
         if (topTracksList != null) {
             prompt.append("Here are the users top tracks: ");
             for (Track a : topTracksList) {
-                prompt.append(a.getTrackName());
+                for (int i = 0; i < a.getTrackName().length(); i++) {
+                    if (a.getTrackName().charAt(i) =='"') {
+                        prompt.append("'");
+                    } else {
+                        prompt.append(a.getTrackName().charAt(i));
+                    }
+                }
                 prompt.append(", ");
             }
         }
 
+        currentUser.getUserWraps().remove(String.valueOf(currentUser.getUserWraps().size() - 1));
+        List<Insight> dummyInsights = new ArrayList<>();
+        dummyInsights.add(new Insight("Loading...", "Your insights will appear here soon..."));
+        RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
+        InsightsAdapter adapter = new InsightsAdapter(dummyInsights);
+        recyclerView.setAdapter(adapter);
+
         LLMQueryManager manager = new LLMQueryManager();
-        ArrayList<String> preferences = new ArrayList<>();
-        final boolean[] flag = {false};
-        Thread thread = new Thread(new Runnable() {
+        HandlerThread thread = new HandlerThread("API_CALL");
+        thread.start();
+        Handler requestHandler = new Handler(thread.getLooper());
+        final Handler responseHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                ArrayList<String> preferences = (ArrayList<String>) msg.obj;
+                List<Insight> insights = new ArrayList<>();
+                for (int i = 0; i < Math.min(preferences.size(), 4); i++) {
+                    String title = "Insight #" + (i + 1);
+                    String description = preferences.get(i);
+                    insights.add(new Insight(title, description));
+                }
+
+                RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
+                InsightsAdapter adapter = new InsightsAdapter(insights);
+                recyclerView.setAdapter(adapter);
+            }
+        };
+
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    Log.d("Prompt", prompt.toString());
                     Response reply = manager.queryPrompt(prompt.toString());
                     ResponseBody replyBody = reply.body();
-                    JSONObject replyJson = new JSONObject(replyBody.string());
+                    assert replyBody != null;
+                    String res = replyBody.string();
+                    JSONObject replyJson = new JSONObject(res);
                     String output = replyJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
                     JSONObject jsonOutput = new JSONObject(output);
                     JSONArray out = jsonOutput.getJSONArray("preferences");
+                    Message msg = new Message();
+                    ArrayList<String> preferences = new ArrayList<>();
                     for (int i = 0; i < out.length(); i++) {
                         preferences.add(out.getString(i));
                     }
-                    flag[0] = true;
+                    msg.obj = preferences;
+                    responseHandler.sendMessage(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        });
-        thread.start();
-        while (!flag[0]);
-        List<Insight> insights = new ArrayList<>();
-        for (int i = 0; i < Math.min(preferences.size(), 5); i++) {
-            String title = "Preference #" + (i + 1);
-            String description = preferences.get(i);
-            Log.d("title", title);
-            Log.d("desc", description);
-            insights.add(new Insight(title, description));
-        }
-
-        RecyclerView recyclerView = view.findViewById(R.id.insights_recycler_view);
-        InsightsAdapter adapter = new InsightsAdapter(insights);
-        recyclerView.setAdapter(adapter);
+        };
+        requestHandler.post(myRunnable);
     }
 }

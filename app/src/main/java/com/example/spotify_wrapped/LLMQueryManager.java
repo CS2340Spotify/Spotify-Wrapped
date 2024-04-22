@@ -32,7 +32,7 @@ public class LLMQueryManager {
                 "\"messages\": [{\"role\":\"system\", \"content\": " +
                 "\"You are a spotify assistant with the goal of describing users based on their music taste. " +
                 "You will be given information about the user and should describe things like how they would act, think, and dress. " +
-                "Return this information in a single array in JSON format named preferences, containing at least ten pieces of information.\"}," +
+                "Return this information in a single array in JSON format named preferences, containing at least ten pieces of information. Respond by referring to the user in the second person. For example: 'you are a fan of mainstream artists.'\"}," +
                 "{\"role\": \"user\", \"content\":\"" + prompt + "\"}]}";
         Log.d("Prompt", body);
         RequestBody reqBody = RequestBody.create(body, MediaType.parse("application/json; charset=utf-8"));

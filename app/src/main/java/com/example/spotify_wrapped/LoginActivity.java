@@ -82,10 +82,10 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         authenticator.createNewUser(LoginActivity.this, accessToken, username, password);
                     } catch (IllegalArgumentException e) {
-                        Toast.makeText(LoginActivity.this, "Please fill out all fields",
+                        Toast.makeText(LoginActivity.this, "Please fill out all fields. Password must be more than 6 characters",
                                 Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
-                        Toast.makeText(LoginActivity.this, "Please fill out all fields",
+                        Toast.makeText(LoginActivity.this, "Please fill out all fields. Password must be more than 6 characters",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }

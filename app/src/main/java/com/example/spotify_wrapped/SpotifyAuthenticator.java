@@ -1,6 +1,8 @@
 package com.example.spotify_wrapped;
 
+
 import com.example.spotify_wrapped.User;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,8 +12,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.android.gms.tasks.OnCompleteListener;
+
 
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,22 +36,31 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 
 
+
+
+
+
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
+
 
 import org.checkerframework.checker.units.qual.C;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.io.IOException;
+import java.util.HashMap;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 
 public class SpotifyAuthenticator {
     public static final String CLIENT_ID = "5f05cbeda0b94c5fa48f4c6a1b5e56cd";
@@ -59,9 +73,13 @@ public class SpotifyAuthenticator {
     private UserViewModel userViewModel;
     private String userId;
 
+
     public SpotifyAuthenticator(UserViewModel userViewModel) {
         this.userViewModel = userViewModel;
     }
+
+
+
 
 
 
@@ -69,6 +87,7 @@ public class SpotifyAuthenticator {
         final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
         AuthorizationClient.openLoginActivity(context, 0, request);
     }
+
 
     public void trySpotifyLogin(Activity context) {
         final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
@@ -78,6 +97,7 @@ public class SpotifyAuthenticator {
         final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
         AuthorizationClient.openLoginActivity(context, 2, request);
     }
+
 
     public void confirm(Activity context, String accessToken) {
         Request request = new Request.Builder()
@@ -90,6 +110,7 @@ public class SpotifyAuthenticator {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d("HTTP", "Login failed");
             }
+
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -116,14 +137,15 @@ public class SpotifyAuthenticator {
                         }
                     });
                 } catch (JSONException e) {
-                    
+
                 }
-                
-                
+
+
             }
         });
     }
     public void loginEmailPassword(Activity context, String email, String password) {
+
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
@@ -156,6 +178,7 @@ public class SpotifyAuthenticator {
                 Log.d("HTTP", "Failed to fetch data: " + e);
             }
 
+
             @Override
             public void onResponse(Call call, Response response) {
                 try {
@@ -172,11 +195,32 @@ public class SpotifyAuthenticator {
                                 } else {
                                     Toast.makeText(context, "Logging you in to existing account", Toast.LENGTH_SHORT).show();
                                     userId = (String) task.getResult().getValue();
-                                    Intent intent = new Intent(context, MainActivity.class);
-                                    intent.putExtra("currentUserId", userId);
-                                    intent.putExtra("accessToken", accessToken);
-                                    context.setResult(-1, intent);
-                                    context.finish();
+                                    mDatabase.child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            HashMap<String, Object> vals = (HashMap<String, Object>) task.getResult().getValue();
+                                            String email = (String) vals.get("email");
+                                            String password = (String) vals.get("password");
+                                            mAuth.signInWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            if (task.isSuccessful()) {
+                                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                                userId = user.getUid();
+                                                                Intent intent = new Intent(context, MainActivity.class);
+                                                                intent.putExtra("currentUserId", userId);
+                                                                intent.putExtra("accessToken", accessToken);
+                                                                context.setResult(-1, intent);
+                                                                context.finish();
+                                                            } else {
+                                                                Toast.makeText(context, "Invalid Credentials",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -194,14 +238,17 @@ public class SpotifyAuthenticator {
         });
     }
 
+
     public void updateAccessToken(Activity context) {
         final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
         AuthorizationClient.openLoginActivity(context, 1, request);
     }
 
 
+
+
     public void createNewUser(Activity context, String accessToken, String username, String password) throws IllegalArgumentException {
-        if (username.equals("") || password.equals("")) {
+        if (username.equals("") || password.equals("") || password.length() < 6) {
             throw new IllegalArgumentException();
         }
         Request request = new Request.Builder()
@@ -209,6 +256,7 @@ public class SpotifyAuthenticator {
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .build();
         call = okHttpClient.newCall(request);
+
 
         call.enqueue(new Callback() {
             @Override
@@ -252,6 +300,7 @@ public class SpotifyAuthenticator {
                                                         mDatabase.child(appID).setValue(newUser);
                                                         mDatabase.child(appID).child("image").setValue(image);
 
+
                                                         Intent intent = new Intent(context, MainActivity.class);
                                                         intent.putExtra("currentUserId", appID);
                                                         intent.putExtra("accessToken", accessToken);
@@ -261,6 +310,7 @@ public class SpotifyAuthenticator {
                                                 });
                                     } catch (JSONException e) {
                                     }
+
 
                                 } else {
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -272,6 +322,7 @@ public class SpotifyAuthenticator {
                                     });
                                     String id = (String) task.getResult().getValue();
 
+
                                     Intent intent = new Intent(context, MainActivity.class);
                                     intent.putExtra("currentUserId", id);
                                     context.setResult(-1, intent);
@@ -280,6 +331,7 @@ public class SpotifyAuthenticator {
                             }
                         }
                     });
+
 
                 } catch (JSONException e) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -290,11 +342,15 @@ public class SpotifyAuthenticator {
                         }
                     });
 
+
                 }
             }
         });
 
+
     }
+
+
 
 
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
@@ -305,9 +361,11 @@ public class SpotifyAuthenticator {
                 .build();
     }
 
+
     private Uri getRedirectUri() {
         return Uri.parse(REDIRECT_URI);
     }
+
 
     public String getUserId() {
         return userId;

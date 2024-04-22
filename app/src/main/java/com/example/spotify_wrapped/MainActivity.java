@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tokenTextView, codeTextView, profileTextView;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -67,16 +70,17 @@ public class MainActivity extends AppCompatActivity {
 
         replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);
+        binding.bottomNavigationView.setVisibility(View.VISIBLE);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
             int itemId = item.getItemId();
-            if (itemId == R.id.navigation_home) {
-                replaceFragment(new HomeFragment());
-            } else if (itemId == R.id.navigation_insights) {
+            if (itemId == R.id.navigation_insights) {
                 replaceFragment(new InsightsFragment());
-            } else if (itemId == R.id.navigation_profile) {
+            } else if (itemId == R.id.navigation_home) {
                 replaceFragment(new ProfileFragment());
+            } else if (itemId == R.id.add_wrap) {
+                replaceFragment(new ChooseTimeWrapFragment());
             }
 
             return true;
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
@@ -166,7 +170,24 @@ public class MainActivity extends AppCompatActivity {
                 String accessToken = intent.getStringExtra("accessToken");
                 Log.wtf("huh", id);
                 model = new ViewModelProvider(this).get(UserViewModel.class);
-                model.getUserInformation(id, accessToken, this);
+//                Thread t = new Thread(new Runnable() {
+//                    public void run() {
+//                        model.getUserInformation(id, accessToken);
+//                        synchronized(model) {
+//                            try {
+//                                model.wait();
+//                                System.out.println("hi");
+//                            } catch (InterruptedException e){
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                });
+//                t.start();
+                model.getUserInformationSynch(id, accessToken, this);
+
+
+                System.out.println("FUCKCKC");
             }
         }
     }

@@ -5,9 +5,11 @@ import static com.example.spotify_wrapped.UserItemTimeFrame.LONG;
 import static com.example.spotify_wrapped.UserItemTimeFrame.MEDIUM;
 import static com.example.spotify_wrapped.UserItemTimeFrame.SHORT;
 
+
 import  com.example.spotify_wrapped.UserItemTimeFrame;
 
 import android.app.Activity;
+
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,6 +53,15 @@ public class UserViewModel extends ViewModel {
     private User currentUser;
     private final OkHttpClient okHttpClient = new OkHttpClient();
     private Call call;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mUserRef;
+    private DatabaseReference idHash;
+    private DatabaseReference idRef;
+    private Boolean infoGathered = false;
+
+
+
+    private MutableLiveData<User> userLiveData = new MutableLiveData<>();
 
     private final DatabaseReference user = FirebaseDatabase.getInstance().getReference("users");
 
@@ -56,8 +69,26 @@ public class UserViewModel extends ViewModel {
     DatabaseReference playlistsRef = FirebaseDatabase.getInstance().getReference("playlists");
 
     private final DatabaseReference trackData = FirebaseDatabase.getInstance().getReference("tracks");
+    private final Object lock = new Object();
 
-    public void getUserInformation(String id, String token, Activity context) {
+    public void getUserInformationSynch(String id, String token, MainActivity context) {
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                getUserInformation(id, token);
+                synchronized(lock) {
+                    try {
+                        lock.wait();
+                        context.replaceFragment(new ProfileFragment());
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void getUserInformation(String id, String token) {
         if (id == null) {
             Log.wtf("what the fuck", "shit is null");
             return;
@@ -86,42 +117,9 @@ public class UserViewModel extends ViewModel {
                                 currentUser.setWrap(String.valueOf(i), newWrap);
                             }
                         }
-                        System.out.println("hi");
-//                        if (vals.get("topArtists") == null) {
-//                            getArtistsFromSpotify();
-//                        } else {
-//                            ArrayList<HashMap<String,Object>> artists = (ArrayList<HashMap<String, Object>>) vals.get("topArtists");
-//                            for (int i = 1; i <= 10; i++) {
-//                                HashMap<String, Object> artist = (HashMap<String, Object>) artists.get(i);
-//                                String artistImage = (String) artist.get("image");
-//                                String artistName = (String) artist.get("name");
-//                                String artistId = (String) artist.get("id");
-//                                Artist newArtist = new Artist(artistName, artistImage, artistId);
-//                                ArrayList<String> genres = (ArrayList<String>) artist.get("genres");
-//                                for (int j = 1; j < genres.size(); j++) {
-//                                    newArtist.setGenres(String.valueOf(j), genres.get(j));
-//                                }
-//                                currentUser.setArtist(String.valueOf(i), newArtist);
-//                            }
-//                        }
-//                        if (vals.get("topTracks") == null) {
-//                            getTracksFromSpotify();;
-//                        } else {
-//                            ArrayList<HashMap<String,Object>> tracks = (ArrayList<HashMap<String, Object>>) vals.get("topTracks");
-//                            for (int i = 1; i <= 20; i++) {
-//                                HashMap<String, Object> track = (HashMap<String, Object>) tracks.get(i);
-//                                String albumImage = (String) track.get("albumImage");
-//                                String albumName = (String) track.get("albumName");
-//                                String id = (String) track.get("id");
-//                                String trackName = (String) track.get("trackName");
-//                                Track newTrack = new Track(trackName, albumName, albumImage, id);
-//                                ArrayList<String> artists = (ArrayList<String>) track.get("artists");
-//                                for (int j = 1; j < artists.size(); j++) {
-//                                    newTrack.setArtists(String.valueOf(j), artists.get(j));
-//                                }
-//                                currentUser.setTrack(String.valueOf(i), newTrack);
-//                            }
-//                        }
+                        synchronized (lock) {
+                            lock.notify();
+                        }
                     } catch (Exception e) {
                         Log.wtf("JSON", "JSON Error");
                     }
@@ -129,6 +127,52 @@ public class UserViewModel extends ViewModel {
             }
         });
     }
+    public void deleteAccount(Activity context) {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        DatabaseReference mUserRef;
+        DatabaseReference idRef;
+
+        if (currentUser != null) {
+            // Initializes database references
+            mUserRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+            idRef = FirebaseDatabase.getInstance().getReference("id_hash").child(this.currentUser.getSpotId());
+
+            // Deletes user's authentication credentials
+            currentUser.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Remove user data from Firebase Realtime Database and id hash
+                                mUserRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            idRef.removeValue()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                Toast.makeText(context, "Failed to delete user ID from hash", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        } else {
+                                            Log.wtf("hi", "hi");
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(context, "Failed to delete user account", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
 
     /**
      * Returns a new wrapped with one of the set time frames given by the spotify API. Another
@@ -164,6 +208,36 @@ public class UserViewModel extends ViewModel {
         }
         currentUser.setWrap(String.valueOf(currentUser.getUserWraps().size()), newWrap);
         user.child(currentUser.getId()).child("wraps").setValue(currentUser.getUserWraps());
+        return newWrap;
+    }
+
+    public Wrap makeNewWrappedInsights(UserItemTimeFrame time, Activity context) {
+        Long dateNow = System.currentTimeMillis() / 1000L;
+        Long dateFrom;
+        if (time == LONG) {
+            dateFrom = dateNow - 31556926L;
+        } else if (time == MEDIUM) {
+            dateFrom = dateNow - 15778458L;
+        } else {
+            dateFrom = dateNow - 2629743L;
+        }
+        Wrap newWrap = new Wrap(dateNow, dateFrom);
+        getTracksFromSpotify(time, newWrap, context);
+        synchronized(newWrap.getTopTracks()) {
+            try {
+                newWrap.getTopTracks().wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        getArtistsFromSpotify(time, newWrap, context);
+        synchronized(newWrap.getTopArtists()) {
+            try {
+                newWrap.getTopArtists().wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return newWrap;
     }
 
@@ -310,9 +384,6 @@ public class UserViewModel extends ViewModel {
                             imageUrl = (String) imageOb.get("url");
                         }
                         ArrayList<String> songs = new ArrayList<>();
-                        Playlist newPlaylist = new Playlist(name, imageUrl, id, songs);
-                        currentUser.setPlaylist(String.valueOf(i + 1), newPlaylist);
-                        playlistsRef.child(newPlaylist.getId()).setValue(newPlaylist);
                     }
                 } catch (JSONException e) {
                     Log.wtf("Http", e.getMessage());
@@ -396,9 +467,9 @@ public class UserViewModel extends ViewModel {
         String userId = updatedUser.getId();
 
         HashMap<String, Object> updates = new HashMap<>();
-//        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
-//            updates.put("name", updatedUser.getName());
-//        }
+        if (!TextUtils.isEmpty(updatedUser.getName()) && !updatedUser.getName().equals(currentUser.getName())) {
+            updates.put("name", updatedUser.getName());
+        }
         if (!TextUtils.isEmpty(updatedUser.getUsername()) && !updatedUser.getUsername().equals(currentUser.getUsername())) {
             updates.put("username", updatedUser.getUsername());
         }
@@ -411,6 +482,11 @@ public class UserViewModel extends ViewModel {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            if (updates.containsKey("password")) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                user.updatePassword(updatedUser.getPassword());
+                            }
+                            userLiveData.postValue(updatedUser);
                             Toast.makeText(context, "Account updated successfully", Toast.LENGTH_SHORT).show();
                             //String pass = currentUser.getPassword();
 
@@ -427,9 +503,17 @@ public class UserViewModel extends ViewModel {
         }
     }
 
+    public LiveData<User> getCurrentUserLiveData() {
+        return userLiveData;
+    }
 
+    public User getCurrentUser() {
 
-    public User getCurrentUser() {return currentUser;}
+        getUserInformation(currentUser.getId(), currentUser.getAccessToken());
+        return currentUser;}
 
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
 
 }

@@ -45,8 +45,7 @@ android {
         properties.load(project.rootProject.file("gradle.properties").newDataInputStream())
 
         // Set API keys in BuildConfig
-        //buildConfigField "String", "OPENAI_API_KEY", "\"${properties.getProperty("OPENAI_API_KEY")}\""
-        buildConfigField "String", "OPENAI_API_KEY", "\"API_KEY\""
+        buildConfigField "String", "OPENAI_API_KEY", "\"${properties.getProperty("OPENAI_API_KEY")}\""
     }
 
     buildFeatures {

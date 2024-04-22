@@ -36,7 +36,7 @@ public class ChooseTimeWrapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setVisibility(View.GONE);
+        bottomNavigationView.setVisibility(View.VISIBLE);
 
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 

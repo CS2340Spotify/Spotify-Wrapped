@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +72,7 @@ public class WrapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setVisibility(View.GONE);
+        bottomNavigationView.setVisibility(View.VISIBLE);
 
         model = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
@@ -155,14 +156,14 @@ public class WrapFragment extends Fragment {
             wrapBackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceFragment(new ProfileFragment());
+                    replaceFragment(new ChooseTimeWrapFragment());
                 }
             });
         } else {
             wrapBackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceFragment(new PastWrapsFragment());
+                    replaceFragment(new ChooseTimeWrapFragment());
                 }
             });
         }
