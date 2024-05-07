@@ -64,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 authenticator.getToken(LoginActivity.this);
+                linkSpotify.setBackgroundColor(getResources().getColor(R.color.spotify_light));
+                linkSpotify.setText("Linked");
             }
         });
         logInWithSpotify.setOnClickListener(new View.OnClickListener() {

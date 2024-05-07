@@ -85,30 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
-
-        // Initialize the views
-//        tokenTextView = (TextView) findViewById(R.id.token_text_view);
-//        codeTextView = (TextView) findViewById(R.id.code_text_view);
-//        profileTextView = (TextView) findViewById(R.id.response_text_view);
-//
-//        // Initialize the buttons
-//        Button tokenBtn = (Button) findViewById(R.id.token_btn);
-//        Button codeBtn = (Button) findViewById(R.id.code_btn);
-//        Button profileBtn = (Button) findViewById(R.id.profile_btn);
-//
-//        // Set the click listeners for the buttons
-//
-//        tokenBtn.setOnClickListener((v) -> {
-//            getToken();
-//        });
-//
-//        codeBtn.setOnClickListener((v) -> {
-//            getCode();
-//        });
-//
-//        profileBtn.setOnClickListener((v) -> {
-//            onGetUserProfileClicked();
-//        });
     }
 
     public void replaceFragment(Fragment fragment) {
@@ -168,26 +144,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String id = intent.getStringExtra("currentUserId");
                 String accessToken = intent.getStringExtra("accessToken");
-                Log.wtf("huh", id);
                 model = new ViewModelProvider(this).get(UserViewModel.class);
-//                Thread t = new Thread(new Runnable() {
-//                    public void run() {
-//                        model.getUserInformation(id, accessToken);
-//                        synchronized(model) {
-//                            try {
-//                                model.wait();
-//                                System.out.println("hi");
-//                            } catch (InterruptedException e){
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                });
-//                t.start();
                 model.getUserInformationSynch(id, accessToken, this);
-
-
-                System.out.println("FUCKCKC");
             }
         }
     }
